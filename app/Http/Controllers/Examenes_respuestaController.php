@@ -28,7 +28,7 @@ use Illuminate\Http\Request;
 class Examenes_respuestaController extends Controller {
 
 
-	public function getIndex(Request $request)
+	public function anyIndex(Request $request)
 	{
 		$examenes = Examen_respuesta::all();
 		return $examenes;

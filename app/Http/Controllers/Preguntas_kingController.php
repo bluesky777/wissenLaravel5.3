@@ -29,7 +29,7 @@ use DB;
 class Preguntas_kingController extends Controller {
 
 
-	public function getIndex(Request $request)
+	public function anyIndex(Request $request)
 	{	
 		$user 			= User::fromToken();
 		$evento_id 		= $user->evento_selected_id;

@@ -17,7 +17,7 @@ use Illuminate\Http\Request;
 class RolesController extends Controller {
 
 
-	public function getIndex()
+	public function anyIndex()
 	{
 		$roles = Role::with('perms')->get();
 		return $roles;

@@ -22,7 +22,7 @@ use DB;
 class EvaluacionesController extends Controller {
 
 
-	public function getIndex(Request $request)
+	public function anyIndex(Request $request)
 	{
 		$user = User::fromToken();
 		$evento_id = Evento::actual()->id;

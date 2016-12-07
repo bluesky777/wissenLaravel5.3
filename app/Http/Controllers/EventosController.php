@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 class EventosController extends Controller {
 
 
-	public function getIndex()
+	public function anyIndex()
 	{
 		$events = Evento::todos();
 

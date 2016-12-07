@@ -16,12 +16,6 @@ use DB;
 class Contenido_traducController extends Controller {
 
 	
-	public function index()
-	{
-		//
-	}
-
-
 	public function putUpdate(Request $request)
 	{
 		

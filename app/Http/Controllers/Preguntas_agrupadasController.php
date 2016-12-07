@@ -21,7 +21,7 @@ class Preguntas_agrupadasController extends Controller {
 
 	
 
-	public function getIndex(Request $request)
+	public function anyIndex(Request $request)
 	{	
 		/* Probando los Providers personales
 		(\Preg $preguntaServ)
