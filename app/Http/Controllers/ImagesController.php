@@ -12,7 +12,7 @@ use App\Models\ImagenModel;
 
 class ImagesController extends Controller {
 
-	public function anyIndex()
+	public function getIndex()
 	{
 		$user = User::fromToken();
 		

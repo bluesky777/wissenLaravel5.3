@@ -15,7 +15,7 @@ use App\Models\User;
 
 class IdiomasController extends Controller {
 
-	public function anyIndex()
+	public function getIndex()
 	{
 		$idiomas = Idioma::all();
 		return $idiomas;

@@ -26,7 +26,7 @@ use Illuminate\Http\Request;
 class UsersController extends Controller {
 
 
-	public function anyIndex()
+	public function getIndex()
 	{
 		$user = User::fromToken();
 		$evento_id = $user->evento_selected_id;
@@ -110,7 +110,16 @@ class UsersController extends Controller {
 		$user_event 			= new User_event;
 		$user_event->user_id 	= $usuario->id;
 		$user_event->evento_id 	= $evento_id;
-		$user_event->nivel_id 	= $request->input('nivel_id');
+
+		$nivel_id = $request->input('nivel_id');
+		if ($nivel_id == ''){
+			$nivel_id = null;
+		}
+		if ($nivel_id == "-1" || $nivel_id == -1) {
+			$nivel_id = 0;
+		}
+
+		$user_event->nivel_id 	= $nivel_id;
 		$user_event->save();
 
 		$inscripciones_nuevas = [];

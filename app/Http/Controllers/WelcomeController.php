@@ -16,7 +16,7 @@ use App\Models\Qrcode;
 class WelcomeController extends Controller {
 
 
-	public function anyIndex(Request $request)
+	public function getIndex(Request $request)
 	{
 		$evento = Evento::where('actual', true)->first();
 		$evento->ip = $request->ip();

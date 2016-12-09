@@ -17,7 +17,7 @@ use App\Models\Evento;
 
 class ChatController extends Controller {
 
-	public function anyIndex()
+	public function getIndex()
 	{
 
 		try {

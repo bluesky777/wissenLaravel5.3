@@ -89,7 +89,7 @@ class CreateWsevaluacionesTable extends Migration {
 		Schema::create('ws_opciones', function(Blueprint $table) {
 			$table->engine = "InnoDB";
             $table->increments('id');
-            $table->string('definicion')->nullable();
+            $table->text('definicion')->nullable();
             $table->integer('pregunta_traduc_id')->unsigned();
             $table->integer('image_id')->unsigned()->nullable(); // si también quiere poner imagen
             $table->integer('orden')->unsigned()->nullable(); // Aparecerá como primera, segunda, etc. Solo importará si la pregunta no está configurada para que sea de opciones aleatoria

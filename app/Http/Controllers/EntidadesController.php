@@ -16,7 +16,7 @@ use Illuminate\Http\Request;
 class EntidadesController extends Controller {
 
 
-	public function anyIndex()
+	public function getIndex()
 	{
 		$user = User::fromToken();
 		$evento_id = $user->evento_selected_id;
