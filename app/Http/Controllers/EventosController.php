@@ -132,6 +132,7 @@ class EventosController extends Controller {
 		$event->nombre 					= $request->input('nombre', $event->nombre);
 		$event->alias 					= $request->input('alias', $event->alias);
 		$event->descripcion 			= $request->input('descripcion', $event->descripcion);
+		$event->gran_final 				= $request->input('gran_final', $event->gran_final);
 		#$event->examen_actual_id 		= $request->input('examen_actual_id', $event->examen_actual_id);
 		$event->idioma_principal_id 	= $request->input('idioma_principal_id', $event->idioma_principal_id);
 		$event->es_idioma_unico 		= $request->input('es_idioma_unico', $event->es_idioma_unico);
