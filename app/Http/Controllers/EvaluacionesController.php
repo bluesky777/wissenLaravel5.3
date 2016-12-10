@@ -125,8 +125,8 @@ class EvaluacionesController extends Controller {
 		$evaluacion->categoria_id 	= $request->input('categoria_id');
 		$evaluacion->evento_id 		= $evento_id;
 		$evaluacion->descripcion 	= $request->input('descripcion');
-		$evaluacion->duracion_preg 	= $request->input('duracion_preg', 0);
-		$evaluacion->duracion_exam 	= $request->input('duracion_exam', 0);
+		$evaluacion->duracion_preg 	= $request->input('duracion_preg', 40);
+		$evaluacion->duracion_exam 	= $request->input('duracion_exam', 20);
 		$evaluacion->one_by_one 	= $request->input('one_by_one', true);
 		$evaluacion->created_by 	= $user->id;
 		$evaluacion->actual 		= $request->input('actual', false);

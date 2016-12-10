@@ -40,7 +40,7 @@ class Evaluacion extends Model {
 	}
 
 
-	public static function crearPrimera($evento_id, $categoria_id, $descripcion, $duracion_preg=20, $duracion_exam=20, $id=false){
+	public static function crearPrimera($evento_id, $categoria_id, $descripcion, $duracion_preg=40, $duracion_exam=20, $id=false){
 
 		$evaluacion 				= new Evaluacion;
 		$evaluacion->categoria_id 	= $categoria_id;
