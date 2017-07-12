@@ -33,11 +33,11 @@ class EvaluacionesController extends Controller {
 
 		if ($categoria_id) {
 			$evaluaciones = Evaluacion::where('categoria_id', $categoria_id)
-						->where('evento_id', '=', $evento_id)
+						->where('evento_id', $evento_id)
 						->get();
 		}else{
 			$evaluaciones = Evaluacion::orderBy('categoria_id')
-						->where('evento_id', '=', $evento_id)
+						->where('evento_id', $evento_id)
 						->get();
 		}
 

@@ -16,6 +16,9 @@ Route::get('/', function () {
 });
 
 
+// Debo reemplazar el archivo "AdvancedRoute.php" de "lesichkovm"  en vendor 
+
+
 Route::group(['prefix' => 'api'], function () {
 
 	AdvancedRoute::controller('welcome', 'WelcomeController');
@@ -54,6 +57,7 @@ Route::group(['prefix' => 'api'], function () {
 	AdvancedRoute::controller('opciones_agrupadas', 'Opciones_agrupadasController');
 	AdvancedRoute::controller('pregunta_evaluacion', 'Pregunta_evaluacionController');
 	AdvancedRoute::controller('informes', 'InformesController');
+	AdvancedRoute::controller('informes-infor', 'informes\DatosController');
 
 	AdvancedRoute::controller('login', 'LoginController');
 	AdvancedRoute::controller('roles', 'RolesController');
