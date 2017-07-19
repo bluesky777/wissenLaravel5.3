@@ -21,7 +21,7 @@ class Entidad extends Model {
 	{
 		$consulta = 'SELECT e.id, e.nombre, e.lider_id, e.lider_nombre, e.logo_id, 
 						e.telefono, e.alias, e.evento_id as idioma,
-						e.logo_id, IFNULL(CONCAT("perfil/", i.nombre), CONCAT("perfil/system/avatars/no-photo.jpg")) as logo_nombre
+						e.logo_id, IFNULL(i.nombre, "system/avatars/no-photo.jpg") as logo_nombre, i.publica
 					FROM ws_entidades e
 					left join images i on i.id=e.logo_id and i.deleted_at is null
 					where e.evento_id =:evento_id and e.deleted_at is null';

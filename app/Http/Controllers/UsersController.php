@@ -3,6 +3,7 @@
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
+use Request;
 
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
@@ -20,18 +21,15 @@ use DB;
 
 
 
-use Illuminate\Http\Request;
-
-
 class UsersController extends Controller {
 
 
 	public function getIndex()
 	{
-		$user = User::fromToken();
-		$evento_id = $user->evento_selected_id;
+		$user 		= User::fromToken();
+		$evento_id 	= $user->evento_selected_id;
 
-		$consulta = 'SELECT u.id, u.nombres, u.apellidos, u.sexo, u.username, u.email, u.is_superuser, 
+		$consulta 	= 'SELECT u.id, u.nombres, u.apellidos, u.sexo, u.username, u.email, u.is_superuser, 
 						u.cell, u.edad, u.idioma_main_id, u.evento_selected_id, 
 						IFNULL(e.nivel_id, "") as nivel_id, e.pagado, e.pazysalvo, u.entidad_id, 
 						u.imagen_id, IFNULL(CONCAT("perfil/", i.nombre), IF(u.sexo="F", :female, :male)) as imagen_nombre,
@@ -42,7 +40,7 @@ class UsersController extends Controller {
 					left join ws_entidades en on en.id=u.entidad_id and en.deleted_at is null
 					where u.deleted_at is null order by u.id DESC';
 
-		$usuarios = DB::select($consulta, [':female'=>User::$default_female, ':male'=>User::$default_male, ':evento_id' => $evento_id] );
+		$usuarios 	= DB::select($consulta, [':female'=>User::$default_female, ':male'=>User::$default_male, ':evento_id' => $evento_id] );
 
 
 		$cant = count($usuarios);
@@ -63,23 +61,23 @@ class UsersController extends Controller {
 
 
 
-	public function putCambiarPass(Request $request)
+	public function putCambiarPass()
 	{
 		$user = User::fromToken();
 		
-		$usu = User::find($request->usu_id);
-		$usu->password = Hash::make($request->input('password', ''));
+		$usu = User::find(Request::usu_id);
+		$usu->password = Hash::make(Request::input('password', ''));
 		$usu->save();
 		return "Contraseña cambiada";
 
 	}
 
 
-	public function postStore(Request $request)
+	public function postStore()
 	{
 		$user 			= User::fromToken();
 		$evento_id 		= $user->evento_selected_id;
-		$imgUsuario 	= $request->input('imgUsuario');
+		$imgUsuario 	= Request::input('imgUsuario');
 
 		$usuario = new User;
 
@@ -88,17 +86,18 @@ class UsersController extends Controller {
 		}
 
 
-		$usuario->nombres 		= $request->input('nombres');
-		$usuario->apellidos 	= $request->input('apellidos');
-		$usuario->sexo 			= $request->input('sexo');
-		$usuario->username 		= $request->input('username');
-		$usuario->password 		= \Hash::make($request->input('password', ''));
-		$usuario->email 		= $request->input('email');
-		$usuario->is_superuser 	= $request->input('is_superuser', false);
-		$usuario->cell 			= $request->input('cell');		
-		$usuario->edad 			= $request->input('edad');	
-		$usuario->entidad_id	= $request->input('entidad')['id'];
+		$usuario->nombres 		= Request::input('nombres');
+		$usuario->apellidos 	= Request::input('apellidos');
+		$usuario->sexo 			= Request::input('sexo');
+		$usuario->username 		= Request::input('username');
+		$usuario->password 		= \Hash::make(Request::input('password', ''));
+		$usuario->email 		= Request::input('email');
+		$usuario->is_superuser 	= Request::input('is_superuser', false);
+		$usuario->cell 			= Request::input('cell');		
+		$usuario->edad 			= Request::input('edad');	
+		$usuario->entidad_id	= Request::input('entidad')['id'];
 		$usuario->idioma_main_id = 1;
+		$usuario->evento_selected_id = $evento_id;
 
 
 		$usuario->save();
@@ -111,7 +110,7 @@ class UsersController extends Controller {
 		$user_event->user_id 	= $usuario->id;
 		$user_event->evento_id 	= $evento_id;
 
-		$nivel_id = $request->input('nivel_id');
+		$nivel_id = Request::input('nivel_id');
 		if ($nivel_id == ''){
 			$nivel_id = null;
 		}
@@ -123,7 +122,7 @@ class UsersController extends Controller {
 		$user_event->save();
 
 		$inscripciones_nuevas = [];
-		$inscripciones = $request->input('inscripciones');
+		$inscripciones = Request::input('inscripciones');
 		$cant_ins = count($inscripciones);
 
 		for($i=0; $i < $cant_ins; $i++){
@@ -143,13 +142,12 @@ class UsersController extends Controller {
 
 
 
-	public function putUpdate(Request $request)
+	public function putUpdate()
 	{
 		$user 			= User::fromToken();
-		$evento_id 		= $user->evento_selected_id;
 
-		$user_id 		= $request->input('id');
-		$imgUsuario 	= $request->input('imgUsuario');
+		$user_id 		= Request::input('id');
+		$imgUsuario 	= Request::input('imgUsuario');
 
 
 		$usuario = User::findOrFail($user_id);
@@ -159,17 +157,16 @@ class UsersController extends Controller {
 		}
 
 		$usuario 				= User::findOrFail($user_id);
-		$usuario->nombres 		= $request->input('nombres');
-		$usuario->apellidos 	= $request->input('apellidos');
-		$usuario->sexo 			= $request->input('sexo');
-		$usuario->username 		= $request->input('username');
-		$usuario->email 		= $request->input('email');
-		$usuario->is_superuser 	= $request->input('is_superuser', false);
-		$usuario->cell 			= $request->input('cell');		
-		$usuario->edad 			= $request->input('edad');
-		$usuario->entidad_id	= $request->input('entidad')['id'];
+		$usuario->nombres 		= Request::input('nombres');
+		$usuario->apellidos 	= Request::input('apellidos');
+		$usuario->sexo 			= Request::input('sexo');
+		$usuario->username 		= Request::input('username');
+		$usuario->email 		= Request::input('email');
+		$usuario->is_superuser 	= Request::input('is_superuser', false);
+		$usuario->cell 			= Request::input('cell');		
+		$usuario->edad 			= Request::input('edad');
 
-		$pass = $request->input('password', '');
+		$pass = Request::input('password', '');
 		if ($pass != '') {
 			$usuario->password = \Hash::make($pass);
 		}
@@ -183,14 +180,14 @@ class UsersController extends Controller {
 
 
 
-	public function putCambiarEntidad(Request $request)
+	public function putCambiarEntidad()
 	{	
 		$user = User::fromToken();
 
-		$user_id = $request->input('user_id');
-		$entidad_id = $request->input('entidad_id');
+		$user_id 		= Request::input('user_id');
+		$entidad_id 	= Request::input('entidad_id');
 
-		$usuario = User::findOrFail($user_id);
+		$usuario 		= User::findOrFail($user_id);
 		$usuario->entidad_id = $entidad_id;
 		$usuario->save();
 

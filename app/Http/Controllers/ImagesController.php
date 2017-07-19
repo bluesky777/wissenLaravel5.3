@@ -22,6 +22,7 @@ class ImagesController extends Controller {
 		return $imagenes;
 	}
 
+
 	public function getUsuarios()
 	{
 		$user = User::fromToken();
@@ -32,19 +33,22 @@ class ImagesController extends Controller {
 				FROM images i WHERE i.user_id=:user_id and i.deleted_at is null;';
 		$respuesta['imagenes'] = DB::select($cons, [':user_id'=> $user['id']]);
 
-
+		// Todos los usuarios
 		if ($user['is_superuser']) {
 			$cons = 'SELECT u.*, i.nombre as imagen_nombre,
 					u.imagen_id, IFNULL(CONCAT("'.User::$perfil_path.'", i.nombre), IF(u.sexo="F","'.User::$default_female.'", "'.User::$default_male.'") ) as imagen_nombre  
 					FROM users u  
-					LEFT JOIN images i on i.id=u.imagen_id and i.deleted_at is null;';
+					LEFT JOIN images i on i.id=u.imagen_id and i.deleted_at is null
+					where u.deleted_at is null order by u.id DESC;';
 			$respuesta['usuarios'] = DB::select($cons);
-		}else{
-			$cons = 'SELECT u.*, i.nombre as imagen_nombre 
+		}
+		if($user->hasRole('Asesor')){
+		
+			$cons = 'SELECT u.*, i.nombre as imagen_nombre, 
 					u.imagen_id, IFNULL(CONCAT("'.User::$perfil_path.'", i.nombre), IF(u.sexo="F","'.User::$default_female.'", "'.User::$default_male.'") ) as imagen_nombre  
 					FROM users u  
 					LEFT JOIN images i on i.id=u.imagen_id and i.deleted_at is null
-					WHERE u.is_superuser = false;';
+					WHERE u.is_superuser = false and u.deleted_at is null order by u.id DESC;';
 			$respuesta['usuarios'] = DB::select($cons);
 		}
 

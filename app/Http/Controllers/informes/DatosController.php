@@ -59,6 +59,8 @@ class DatosController extends Controller {
 
 				$cant = count($evaluaciones);
 
+				// Traemos las preguntas de cada evaluación
+				/*
 				for($j = 0; $j < $cant; $j++){
 
 					$evaluacion = $evaluaciones[$j];
@@ -79,10 +81,21 @@ class DatosController extends Controller {
 					}
 					$evaluacion->preguntas_evaluacion = $pregs_eval;
 				}
+				*/
 				$categorias[$h]->evaluaciones = $evaluaciones;
 			}
 			$events[$i]->categorias 	= $categorias;
+
+
+
+			// Ahora las entidades
+			$consulta 				= 'SELECT * FROM ws_entidades e where e.evento_id=? and e.deleted_at is null';
+			$entidades 				= DB::select($consulta, [$evento_id] );
+			$events[$i]->entidades 	= $entidades;
+
 		}
+
+
 
 		$datos['eventos'] = $events;
 

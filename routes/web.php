@@ -58,6 +58,7 @@ Route::group(['prefix' => 'api'], function () {
 	AdvancedRoute::controller('pregunta_evaluacion', 'Pregunta_evaluacionController');
 	AdvancedRoute::controller('informes', 'InformesController');
 	AdvancedRoute::controller('informes-infor', 'informes\DatosController');
+	AdvancedRoute::controller('puestos', 'informes\PuestosController');
 
 	AdvancedRoute::controller('login', 'LoginController');
 	AdvancedRoute::controller('roles', 'RolesController');

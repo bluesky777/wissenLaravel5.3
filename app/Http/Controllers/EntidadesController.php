@@ -51,7 +51,7 @@ class EntidadesController extends Controller {
 
 	
 	
-	public function putUpdate($id, Request $request) // pongo id por la ruta
+	public function putUpdate(Request $request) // pongo id por la ruta
 	{
 		$user = User::fromToken();
 		$evento_id = $user->evento_selected_id;

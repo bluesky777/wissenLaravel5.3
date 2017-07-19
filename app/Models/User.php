@@ -183,11 +183,11 @@ class User extends Authenticatable {
 		// Traemos evento o eventos
 		$evento_id = [];
 
-		if($usuario->hasRole('Admin')){
+		if($usuario->hasRole('Admin') || $usuario->hasRole('Asesor')){
 			$usuario->eventos = Evento::todos();
 			$evento_id = $usuario->evento_selected_id;
 		}else{
-			$usuario->evento_actual = Evento::actual();
+			$usuario->evento_actual = Evento::actual(); // Creo que debería traer el evento al que está inscrito, no el actual
 			$evento_id = $usuario->evento_actual->id;
 		}
 
@@ -243,6 +243,10 @@ class User extends Authenticatable {
 
 		return $perms;
 	}
+
+
+
+
 
 
 
