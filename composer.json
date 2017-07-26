@@ -14,7 +14,8 @@
         "tymon/jwt-auth": "0.5.*",
         "intervention/image": "^2.3",
         "barryvdh/laravel-cors": "^0.8.2",
-        "cboden/ratchet": "^0.3.5"
+        "cboden/ratchet": "^0.3.5",
+        "maatwebsite/excel": "~2.1.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

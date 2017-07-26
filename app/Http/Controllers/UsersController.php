@@ -119,6 +119,7 @@ class UsersController extends Controller {
 		}
 
 		$user_event->nivel_id 	= $nivel_id;
+		$user_event->signed_by 	= $user->id;
 		$user_event->save();
 
 		$inscripciones_nuevas = [];

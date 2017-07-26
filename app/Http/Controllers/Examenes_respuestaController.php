@@ -225,6 +225,20 @@ class Examenes_respuestaController extends Controller {
 
 
 
+	public function putSetTerminado(Request $request)
+	{
+		//DB::enableQueryLog();
+		$user 				= User::fromToken();
+		$examen 			= Examen_respuesta::findOrFail($request->input('exa_id'));
+		$examen->terminado 	= true;
+		$examen->save();
+
+		return 'Terminado con éxito';
+	
+	}	
+
+
+
 	public function deleteDestroy($id)
 	{
 		//DB::enableQueryLog();

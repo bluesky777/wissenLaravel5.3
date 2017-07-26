@@ -82,6 +82,7 @@ class PuestosController extends Controller {
 						    ct.nombre as nombre_categ, ct.abrev as abrev_categ, ct.descripcion as descripcion_categ, ct.idioma_id, ct.traducido
 						FROM ws_examen_respuesta e
 						inner join ws_inscripciones i on i.id=e.inscripcion_id and i.deleted_at is null
+						inner join ws_evaluaciones ev on ev.id=e.evaluacion_id and ev.actual=true and e.deleted_at is null
 						inner join users u on u.id=i.user_id and u.deleted_at is null
 						inner join ws_categorias_king ck on ck.id=i.categoria_id and ck.evento_id=:evento_id and ck.deleted_at is null
 						left join ws_categorias_traduc ct on ck.id=ct.categoria_id and ct.idioma_id=:idioma_id and ct.deleted_at is null
@@ -126,7 +127,7 @@ class PuestosController extends Controller {
 
 		$entidades_f = DB::select($consulta, [':evento_id' => $evento_id] );
 		$entidades = [];
-		
+
 		// Si hay entidades especificadas en el pedido...
 		if ($requested_entidades) {
 			// Eliminamos las entidades NO pedidas
@@ -139,14 +140,20 @@ class PuestosController extends Controller {
 					array_push($entidades, $entidades_f[$i]);
 				}
 			}
+		}else{
+			$entidades = $entidades_f;
 		}
 
 
-		$categorias = [];
+	
+
+
+		$categorias 		= [];
+		$cant_categorias 	= count($requested_categorias);
+
 		// Si hay categorías especificadas ...
 		if ($requested_categorias) {
-			$cant = count($requested_categorias);
-			for ($l=0; $l < $cant; $l++) { 
+			for ($l=0; $l < $cant_categorias; $l++) { 
 				
 				$consulta_categ = 'SELECT distinct ck.id as categoria_id, ct.id as categ_traduc_id, ct.nombre as nombre_categ, ct.abrev as abrev_categ, ct.descripcion as descripcion_categ, 
 									ct.idioma_id, ct.traducido
@@ -191,6 +198,7 @@ class PuestosController extends Controller {
 							    ct.nombre as nombre_categ, ct.abrev as abrev_categ, ct.descripcion as descripcion_categ, ct.idioma_id, ct.traducido
 							FROM ws_examen_respuesta e
 							inner join ws_inscripciones i on i.id=e.inscripcion_id and i.deleted_at is null
+							inner join ws_evaluaciones ev on ev.id=e.evaluacion_id and ev.actual=true and e.deleted_at is null
 							inner join users u on u.id=i.user_id and u.deleted_at is null
 							inner join ws_categorias_king ck on ck.id=i.categoria_id and ck.id=:categoria_id and ck.deleted_at is null
 							left join ws_categorias_traduc ct on ck.id=ct.categoria_id and ct.idioma_id=:idioma_id and ct.deleted_at is null

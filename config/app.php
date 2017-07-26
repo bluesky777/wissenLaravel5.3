@@ -182,6 +182,7 @@ return [
         Zizaco\Entrust\EntrustServiceProvider::class,
         'Tymon\JWTAuth\Providers\JWTAuthServiceProvider',
         Barryvdh\Cors\ServiceProvider::class,
+        'Maatwebsite\Excel\ExcelServiceProvider',
 
 
     ],
@@ -233,6 +234,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Entrust'   => Zizaco\Entrust\EntrustFacade::class,
         'JWTAuth' => 'Tymon\JWTAuth\Facades\JWTAuth',
+        'Excel' => 'Maatwebsite\Excel\Facades\Excel',
 
     ],
 
