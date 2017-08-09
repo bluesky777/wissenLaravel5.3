@@ -128,7 +128,7 @@ class UsersController extends Controller {
 
 		for($i=0; $i < $cant_ins; $i++){
 
-			$inscrip = Inscripcion::inscribir($usuario->id, $inscripciones[$i]['categoria_id']);
+			$inscrip = Inscripcion::inscribir($usuario->id, $inscripciones[$i]['categoria_id'], $user->id);
 			array_push($inscripciones_nuevas, $inscrip);
 
 		}

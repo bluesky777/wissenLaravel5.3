@@ -98,7 +98,7 @@ class Inscripcion extends Model {
 						FROM ws_inscripciones i 
 						where i.user_id=:user_id and i.categoria_id=:categoria_id and i.deleted_at is null';
 
-		$inscripcion = \DB::select(\DB::raw($consulta), array(':user_id' => $user_id, ':categoria_id' => $categoria_id) );
+		$inscripcion = \DB::select($consulta, [':user_id' => $user_id, ':categoria_id' => $categoria_id] );
 		if (count($inscripcion)>0){
 			return $inscripcion[0];
 		}else{
