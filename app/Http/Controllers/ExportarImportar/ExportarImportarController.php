@@ -150,7 +150,7 @@ class ExportarImportarController extends Controller {
 
 		for ($i=0; $i < $cant; $i++) { 
 
-			$usu_a_importar 	= $array_usuarios[$i]['a_importar'];
+			$usu_a_importar 	= $array_usuarios[$i];
 
 			$consulta = 'SELECT * FROM  users u where u.username=? ';
 
