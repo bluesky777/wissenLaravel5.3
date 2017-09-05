@@ -112,6 +112,58 @@ class ChatSCComandos {
 		return true;
 	}
 
+
+	public function establecer_fondo($from, $clients, $msg)
+	{
+		$img_name 							= $msg->img_name;
+		Chat::$info_evento->img_name 		= $img_name;
+
+		foreach ($clients as $client) {
+			$client->send(json_encode(["comando"=>"a_establecer_fondo", "img_name"=>$img_name ]));
+		}
+		return true;
+	}
+
+
+	public function mostrar_solo_fondo($from, $clients, $msg)
+	{
+		$img_name 							= $msg->img_name;
+		Chat::$info_evento->img_name 		= $img_name;
+
+		foreach ($clients as $client) {
+			if ( isset($client->datos->usuario) ) {
+				if (count($client->datos->usuario->roles) > 0) {
+					if($client->datos->usuario->roles[0]->name == "Pantalla"){
+						$client->send(json_encode(["comando"=>"a_mostrar_solo_fondo", "img_name"=>$img_name ]));
+					}
+				}
+			}
+			
+		}
+		return true;
+	}
+
+
+	public function cambiar_teleprompter($from, $clients, $msg)
+	{
+		$msg_teleprompter 						= $msg->msg_teleprompter;
+		Chat::$info_evento->msg_teleprompter 	= $msg_teleprompter;
+
+		foreach ($clients as $client) {
+			if ( isset($client->datos->usuario) ) {
+				if (count($client->datos->usuario->roles) > 0) {
+					if($client->datos->usuario->roles[0]->name == "Pantalla"){
+						$client->send(json_encode(["comando"=>"a_cambiar_teleprompter", "msg_teleprompter"=>$msg_teleprompter ]));
+					}
+				}
+			}
+			
+		}
+		return true;
+	}
+
+
+
 	public function sc_answered($from, $clients, $msg)
 	{
 

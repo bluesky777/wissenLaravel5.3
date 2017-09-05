@@ -28,7 +28,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 use App\Models\ImagenModel;
 use App\Models\Entidad;
-
+use DB;
 
 
 use Illuminate\Http\Request;
@@ -181,14 +181,39 @@ class User extends Authenticatable {
 		
 
 		// Traemos evento o eventos
-		$evento_id = [];
+		$evento_id = 0;
 
 		if($usuario->hasRole('Admin') || $usuario->hasRole('Asesor')){
 			$usuario->eventos = Evento::todos();
 			$evento_id = $usuario->evento_selected_id;
 		}else{
-			$usuario->evento_actual = Evento::actual(); // Creo que debería traer el evento al que está inscrito, no el actual
+			$usuario->evento_actual = Evento::actual(); 
 			$evento_id = $usuario->evento_actual->id;
+		}
+
+
+		// Verifico si está registrado en este evento actual. Si no, traemos el evento al que realmente pertenece
+		if ( !$usuario->hasRole('Admin') && !$usuario->hasRole('Invitado') && !$usuario->hasRole('Pantalla') ) {   // Estos 3 roles interactuan en cualquier evento
+			
+			$consulta = 'SELECT * FROM ws_user_event ue WHERE ue.user_id=? ';
+			$eventos_resgistrados = DB::select($consulta, [ $usuario->id ] );
+
+			$registrado_en_actual = false;
+
+			for ($i=0; $i < count($eventos_resgistrados); $i++) { 
+				if ($eventos_resgistrados[$i]->evento_id == $evento_id) {
+					$registrado_en_actual 	= true;
+				}
+			}
+
+			$usuario->eventos_resgistrados = $eventos_resgistrados;
+			$usuario->registrado_en_actual = $registrado_en_actual;
+
+			if (!$registrado_en_actual) {
+				$ultimo = count($eventos_resgistrados)-1;
+				$usuario->evento_actual = Evento::one( $eventos_resgistrados[ $ultimo ]->evento_id ); // trabajo en el último evento al que se inscribió
+			}
+
 		}
 
 		

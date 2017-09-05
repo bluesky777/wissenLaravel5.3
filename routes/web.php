@@ -66,8 +66,9 @@ Route::group(['prefix' => 'api'], function () {
 	AdvancedRoute::controller('roles', 'RolesController');
 
 
-
+	// ***  Campamento  **
 	AdvancedRoute::controller('ca_login', 'Campamento\LoginController');
 	AdvancedRoute::controller('ca_panel', 'Campamento\PanelController');
+	// *******************
 
 });

@@ -46,9 +46,11 @@ class ChatComandos {
 
 		foreach ($clients as $client) {
 
-			$aEnviar = ["comando" => "conectado", "cliente" => (array)$from->datos];
-			$aEviarString = json_encode($aEnviar);
-			$client->send($aEviarString);
+			if ($from !== $client) {
+				$client->send(json_encode(["comando" => "conectado", "cliente" => (array)$from->datos]));
+			}else{
+				$client->send(json_encode(["comando" => "conectado", "cliente" => (array)$from->datos, "yo_resource_id" => $from->datos->resourceId]));
+			}
 		}
 		
 		return true;
@@ -106,7 +108,7 @@ class ChatComandos {
 				if ($from !== $client) {
 					$client->send(json_encode(["comando" => "registrado", "clt" => $from->datos]));
 				}else{
-					$client->send(json_encode(["comando" => "validado", "yo" => $from->datos]));
+					$client->send(json_encode(["comando" => "validado", "yo" => $from->datos, "info_evento" => Chat::$info_evento]));
 				}
 			}
 		}else{
@@ -148,6 +150,26 @@ class ChatComandos {
 		$all_clts = [];
 		foreach ($clients as $client) {
 			array_push($all_clts, $client->datos);
+
+			/*
+			// Código de prueba:
+			if ($client->datos->usuario->roles[0]->id == 5) {
+				array_push($all_clts, $client->datos);
+				array_push($all_clts, $client->datos);
+				array_push($all_clts, $client->datos);
+				array_push($all_clts, $client->datos);
+				array_push($all_clts, $client->datos);
+				array_push($all_clts, $client->datos);
+				array_push($all_clts, $client->datos);
+				array_push($all_clts, $client->datos);
+				array_push($all_clts, $client->datos);
+				array_push($all_clts, $client->datos);
+				array_push($all_clts, $client->datos);
+				array_push($all_clts, $client->datos);
+			}
+			// Termina código para pruebas "mock"
+			*/
+			
 		}
 		foreach ($clients as $client) {
 			$client->send(json_encode(["comando"=>"take_clts", "clts"=>$all_clts, "info_evento"=>Chat::$info_evento ]));
@@ -292,7 +314,7 @@ class ChatComandos {
 	{
 		foreach ($clients as $client) {
 			if ($client->resourceId == $msg->resourceId) {
-				$client->nombre_punto = $msg->nombre;
+				$client->datos->nombre_punto = $msg->nombre;
 			}
 			$client->send(json_encode(["comando"=>"nombre_punto_cambiado", "resourceId"=>$msg->resourceId, "nombre"=>$msg->nombre ]));
 		}

@@ -150,6 +150,22 @@ class Chat implements MessageComponentInterface {
                 $this->chatScComandos->sc_show_puntaje_examen($from, $this->clients, $msg);
                 break;
 
+
+            case 'establecer_fondo':
+                $this->chatScComandos->establecer_fondo($from, $this->clients, $msg);
+                break;
+
+
+            case 'mostrar_solo_fondo':
+                $this->chatScComandos->mostrar_solo_fondo($from, $this->clients, $msg);
+                break;
+
+
+            case 'cambiar_teleprompter':
+                $this->chatScComandos->cambiar_teleprompter($from, $this->clients, $msg);
+                break;
+
+
             case 'sc_answered':
                 $this->chatScComandos->sc_answered($from, $this->clients, $msg);
                 break;

@@ -20,7 +20,16 @@ class Evento extends Model {
 
 	public static function actual(){
 
-		$evento = Evento::where('actual', true)->first();
+		$consulta = 'SELECT * FROM ws_eventos where actual=true and deleted_at is null';
+		$evento = DB::select($consulta)[0];
+		return $evento;
+
+	}
+
+	public static function one($evento_id){
+
+		$consulta = 'SELECT * FROM ws_eventos where id=? and deleted_at is null';
+		$evento = DB::select($consulta, [$evento_id])[0];
 		return $evento;
 
 	}
