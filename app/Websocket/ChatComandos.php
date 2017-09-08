@@ -434,6 +434,20 @@ class ChatComandos {
 	}
 
 
+	public function liberar_hasta_pregunta($from, $clients, $msg)
+	{
+		Chat::$info_evento->free_till_question 	= $msg->numero;
+		Chat::$info_evento->preg_actual 		= $msg->numero;
+
+		foreach ($clients as $client) {
+			if($client->resourceId != $from->resourceId ){
+				$client->send(json_encode(["comando"=>"set_free_till_question", "free_till_question"=>$msg->numero]));
+			}
+		}
+		return true;
+	}
+
+
 
 		
 }

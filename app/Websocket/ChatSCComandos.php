@@ -38,6 +38,22 @@ class ChatSCComandos {
 		return true;
 	}
 
+	public function sc_show_barras($from, $clients, $msg)
+	{
+		foreach ($clients as $client) {
+			if ( isset($client->datos->usuario) ) {
+				if (count($client->datos->usuario->roles) > 0) {
+					if($client->datos->usuario->roles[0]->name == "Pantalla"){
+						$client->send(json_encode(["comando" => "sc_show_barras" ]));
+					}
+				}
+			}
+            
+        }
+		
+		return true;
+	}
+
 
 	public function sc_show_question($from, $clients, $msg)
 	{

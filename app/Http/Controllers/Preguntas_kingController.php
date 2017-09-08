@@ -161,7 +161,33 @@ class Preguntas_kingController extends Controller {
 			$preg_trad->traducido 		= false;
 			$preg_trad->save();
 
+
+			$opciones_nuevas = [];
+
+			if ($user->idioma_main_id == $preg_trad->idioma_id) {
+				
+				$cont = 0;
+
+				for ($i=0; $i < 4; $i++) { 
+					$opcion = new Opcion;
+					$opcion->definicion 		= 'Opción ' . ($cont+1);
+					$opcion->orden 				= $cont;
+					$opcion->is_correct 		= ($cont == 0 ? true : false);
+					$opcion->pregunta_traduc_id = $preg_trad->id;
+					$opcion->added_by 			= $user->id;
+
+					$opcion->save();
+					$cont++;
+
+					array_push($opciones_nuevas, $opcion);
+				}
+				
+			}
+
 			$preg_trad->opciones 		= []; // Necesario para evitar errores con el length en javascript
+
+
+
 
 		}
 		

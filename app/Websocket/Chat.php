@@ -130,6 +130,10 @@ class Chat implements MessageComponentInterface {
                 $this->chatScComandos->sc_show_participantes($from, $this->clients, $msg);
                 break;
 
+            case 'sc_show_barras':
+                $this->chatScComandos->sc_show_barras($from, $this->clients, $msg);
+                break;
+
             case 'sc_show_question':
                 $this->chatScComandos->sc_show_question($from, $this->clients, $msg);
                 break;
@@ -184,6 +188,10 @@ class Chat implements MessageComponentInterface {
 
             case 'goto_question_no_clt':
                 $this->chatScComandos->goto_question_no_clt($from, $this->clients, $msg);
+                break;
+
+            case 'liberar_hasta_pregunta':
+                $this->chatComandos->liberar_hasta_pregunta($from, $this->clients, $msg);
                 break;
 
             
