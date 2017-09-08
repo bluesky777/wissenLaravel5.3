@@ -71,10 +71,10 @@ class CreateCampamentoTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('mensajes');
-		Schema::drop('usuarios');
-		Schema::drop('penalizaciones');
-		Schema::drop('actividades');
+		Schema::drop('ca_mensajes');
+		Schema::drop('ca_usuarios');
+		Schema::drop('ca_penalizaciones');
+		Schema::drop('ca_actividades');
 	}
 
 }
