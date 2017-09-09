@@ -28,7 +28,7 @@ class ChatSCComandos {
 			if ( isset($client->datos->usuario) ) {
 				if (count($client->datos->usuario->roles) > 0) {
 					if($client->datos->usuario->roles[0]->name == "Pantalla"){
-						$client->send(json_encode(["comando" => "sc_show_participantes", "categorias_traduc" => $msg->categorias_traduc ]));
+						$client->send(json_encode(["comando" => "sc_show_participantes" ]));
 					}
 				}
 			}

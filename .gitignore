@@ -1,7 +1,11 @@
-/node_modules
-/public/storage
 /vendor
+/node_modules
+.env
+.DS_Store
+Thumbs.db
+/public/storage
 /.idea
 Homestead.json
 Homestead.yaml
-.env
+/public/images/perfil
+!/public/images/perfil/system

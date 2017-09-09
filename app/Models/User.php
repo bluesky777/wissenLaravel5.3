@@ -28,6 +28,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 use App\Models\ImagenModel;
 use App\Models\Entidad;
+use App\Models\Categoria_king;
 use DB;
 
 
@@ -189,6 +190,14 @@ class User extends Authenticatable {
 		}else{
 			$usuario->evento_actual = Evento::actual(); 
 			$evento_id = $usuario->evento_actual->id;
+		}
+
+
+		// Si es Pantalla, mandamos las categorías del evento
+		if ($usuario->hasRole('Pantalla')) {
+			$categorias_evento = Categoria_king::where('evento_id', $evento_id)->get();
+			Categoria_traduc::traducciones($categorias_evento); // Paso por referencia la categoria_king
+			$usuario->categorias_evento = $categorias_evento;
 		}
 
 
