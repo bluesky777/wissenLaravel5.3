@@ -25,7 +25,7 @@ class Categoria_traduc extends Model {
 					FROM ws_categorias_traduc t, ws_idiomas i
 					where i.id=t.idioma_id and t.categoria_id =:categoria_id and t.deleted_at is null';
 
-			$categs_trads = \DB::select($consulta, array(':categoria_id' => $categorias_king[$i]->id) );
+			$categs_trads = \DB::select($consulta, [':categoria_id' => $categorias_king[$i]->id ] );
 
 			$categorias_king[$i]->categorias_traducidas = $categs_trads;
 

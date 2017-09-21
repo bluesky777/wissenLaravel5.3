@@ -32,10 +32,16 @@ class CategoriasController extends Controller {
 
 	public function getCategoriasUsuario()
 	{
-		$user = User::fromToken();
-		$evento_id = $user->evento_selected_id;
+		$user 		= User::fromToken();
+		$evento_id 	= $user->evento_selected_id;
 
-		$categoria = Categoria_king::where('evento_id', '=', $evento_id)->get();
+
+		$consulta = 'SELECT * FROM ws_categorias_king where evento_id = :evento_id and deleted_at is null';
+
+		$categs_trads = \DB::select($consulta, [':evento_id' => $evento_id] );
+
+
+		$categoria 	= Categoria_king::where('evento_id', $evento_id)->get();
 
 		
 		Categoria_traduc::traducciones($categoria); // Paso por referencia la categoria_king

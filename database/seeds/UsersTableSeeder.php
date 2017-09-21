@@ -78,12 +78,12 @@ class UsersTableSeeder extends Seeder
 
 		$img1 = new ImagenModel;
 		$img1->id 		= 1;
-		$img1->nombre 	= 'system/avatars/female1.jpg';
+		$img1->nombre 	= 'system/avatars/female1.png';
 		$img1->save();
 
 		$img2 = new ImagenModel;
 		$img2->id 		= 2;
-		$img2->nombre 	= 'system/avatars/male1.jpg';
+		$img2->nombre 	= 'system/avatars/male1.png';
 		$img2->save();
 
 		$img3 = new ImagenModel;

@@ -80,8 +80,8 @@ class User extends Authenticatable {
 
 
 
-    public static $default_female = 'perfil/system/avatars/female1.jpg';
-    public static $default_male = 'perfil/system/avatars/male1.jpg';
+    public static $default_female = 'perfil/system/avatars/female1.png';
+    public static $default_male = 'perfil/system/avatars/male1.png';
     public static $perfil_path = 'perfil/';
 
 
