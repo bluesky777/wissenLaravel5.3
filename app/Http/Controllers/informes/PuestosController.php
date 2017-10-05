@@ -227,6 +227,124 @@ class PuestosController extends Controller {
 
 
 
+
+	public function putExamenesEjecutandose(){
+		$user 				= User::fromToken();
+		$evento_id 			= Request::input('evento_id');
+		$idioma_id 			= Request::input('idioma_id', $user->idioma_main_id);
+		//$gran_final = Request::input('gran_final', false);
+		$ids_participantes 	= Request::input('ids');
+
+
+		$cant_ids 			= count($ids_participantes);
+
+		$condicionales = '';
+
+		for ($i=0; $i < $cant_ids; $i++) {
+			if ($i == 0) {
+				$condicionales = 'u.id=' . $ids_participantes[$i];
+			}else{
+				$condicionales = $condicionales . ' or u.id=' . $cant_ids[$i];
+			}
+		}
+
+		$consulta_ex = 'SELECT e.id as examen_id, e.inscripcion_id, e.evaluacion_id, i.categoria_id, e.active,
+								e.terminado, e.timeout, e.created_at as examen_at, i.user_id, i.allowed_to_answer, i.signed_by, i.created_at as inscrito_at,
+								en.nombre as nombre_entidad, en.alias as alias_entidad, en.lider_id, en.lider_nombre, en.alias,
+							    u.nombres, u.apellidos, u.sexo, u.username, u.entidad_id,
+							    u.imagen_id, IFNULL(CONCAT("perfil/", im.nombre), IF(u.sexo="F", :female, :male)) as imagen_nombre,
+							    ct.nombre as nombre_categ, ct.abrev as abrev_categ, ct.descripcion as descripcion_categ, ct.idioma_id, ct.traducido
+							FROM ws_examen_respuesta e
+							inner join ws_inscripciones i on i.id=e.inscripcion_id and i.deleted_at is null
+							inner join ws_evaluaciones ev on ev.id=e.evaluacion_id and ev.actual=true and e.deleted_at is null
+							inner join users u on u.id=i.user_id and u.deleted_at is null
+							inner join ws_entidades en on en.id=u.entidad_id
+							inner join ws_categorias_king ck on ck.id=i.categoria_id and ck.deleted_at is null
+							left join ws_categorias_traduc ct on ck.id=ct.categoria_id and ct.idioma_id=:idioma_id and ct.deleted_at is null
+							left join images im on im.id=u.imagen_id and im.deleted_at is null 
+							where e.deleted_at is null and ('.$condicionales.')';
+	
+		$examenes = DB::select($consulta_ex, [':female'=>User::$default_female, ':male'=>User::$default_male, ':idioma_id' => $idioma_id] );
+
+		$cant = count($examenes);
+		for ($i=0; $i < $cant; $i++) { 
+			$examenes[$i]->resultados = CalculoExamen::calcular($examenes[$i]);
+		}
+
+
+
+		return $examenes;
+
+	}
+
+
+
+
+
+
+	public function putExamenesCategorias(){
+		$user 		= User::fromToken();
+		$evento_id 	= Request::input('evento_id');
+		$idioma_id 	= Request::input('idioma_id', $user->idioma_main_id);
+		$gran_final = Request::input('gran_final', false);
+
+		
+		$consulta = 'SELECT distinct ck.id as categoria_id, ct.id as categ_traduc_id, ct.nombre as nombre_categ, ct.abrev as abrev_categ, ct.descripcion as descripcion_categ, 
+						ct.idioma_id, ct.traducido
+					FROM ws_categorias_king ck
+					inner join ws_inscripciones i on i.categoria_id=ck.id and i.deleted_at is null
+					INNER JOIN ws_examen_respuesta e ON i.id=e.inscripcion_id AND e.deleted_at is null
+					inner join users u on u.id=i.user_id and u.deleted_at is null 
+					inner join ws_user_event ue on ue.user_id=u.id and ue.evento_id=:evento_id
+					left join ws_categorias_traduc ct on ck.id=ct.categoria_id and ct.idioma_id=:idioma_id and ct.deleted_at is null
+					where ck.deleted_at is null and ck.evento_id=:evento_id2 and e.gran_final='.$gran_final;
+
+		$categorias = DB::select($consulta, [':evento_id' => $evento_id, ':idioma_id' => $idioma_id, ':evento_id2' => $evento_id] );
+
+		$cant_cat = count($categorias);
+		for ($j=0; $j < $cant_cat; $j++) {
+			
+			$categoria_id = $categorias[$j]->categoria_id;
+
+				
+			$consulta_ex = 'SELECT e.id as examen_id, e.inscripcion_id, e.evaluacion_id, i.categoria_id, e.active,
+							e.terminado, e.timeout, e.created_at as examen_at, i.user_id, i.allowed_to_answer, i.signed_by, i.created_at as inscrito_at,
+						    u.nombres, u.apellidos, u.sexo, u.username, u.entidad_id,
+						    u.imagen_id, IFNULL(CONCAT("perfil/", im.nombre), IF(u.sexo="F", :female, :male)) as imagen_nombre,
+						    en.nombre as nombre_entidad, en.alias as alias_entidad, en.lider_id, en.lider_nombre, en.alias,
+					    	en.logo_id, IFNULL(CONCAT("perfil/", im2.nombre), CONCAT("perfil/system/avatars/no-photo.jpg")) as logo_nombre,
+						    ct.nombre as nombre_categ, ct.abrev as abrev_categ, ct.descripcion as descripcion_categ, ct.idioma_id, ct.traducido
+						FROM ws_examen_respuesta e
+						inner join ws_inscripciones i on i.id=e.inscripcion_id and i.deleted_at is null
+						inner join users u on u.id=i.user_id and u.deleted_at is null
+						inner join ws_categorias_king ck on ck.id=i.categoria_id and ck.deleted_at is null and ck.id=:categoria_id
+						inner join ws_user_event ue on ue.user_id=u.id and ue.evento_id=:evento_id
+						inner join ws_entidades en on en.id=u.entidad_id and en.deleted_at is null 
+						left join ws_categorias_traduc ct on ck.id=ct.categoria_id and ct.idioma_id=:idioma_id and ct.deleted_at is null
+						left join images im on im.id=u.imagen_id and im.deleted_at is null 
+						left join images im2 on im2.id=en.logo_id and im2.deleted_at is null 
+						where e.deleted_at is null  and e.gran_final='.$gran_final;
+
+			$examenes = DB::select($consulta_ex, [':female'=>User::$default_female, ':male'=>User::$default_male, ':categoria_id'=>$categoria_id, ':evento_id' => $evento_id, ':idioma_id' => $idioma_id ] );
+
+			$cant = count($examenes);
+			for ($i=0; $i < $cant; $i++) { 
+				$examenes[$i]->resultados = CalculoExamen::calcular($examenes[$i]);
+			}
+
+			$categorias[$j]->examenes = $examenes;
+
+		}
+
+		
+		return $categorias;
+
+	}
+
+
+
+
+
 }
 
 

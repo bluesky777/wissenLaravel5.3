@@ -85,7 +85,7 @@ class ImagesController extends Controller {
 		}
 
 		
-		
+		/*
 		try {
 			
 			$img = Image::make($folder . $newImg->nombre);
@@ -97,6 +97,7 @@ class ImagesController extends Controller {
 		} catch (Exception $e) {
 			
 		}
+		*/
 
 		return $newImg;
 	}

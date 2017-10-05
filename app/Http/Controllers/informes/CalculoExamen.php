@@ -33,24 +33,38 @@ class CalculoExamen {
 		$cantidad_pregs =  CalculoExamen::cantidadPreguntas($examen->evaluacion_id);
 
 
-		$cant_res = count($respuestas);
-		$correctas = 0;
-		$puntos = 0;
-		$tiempo = DB::table('ws_respuestas')->where('examen_respuesta_id', $examen->examen_id)->sum('tiempo');
+		$cant_res 		= count($respuestas);
+		$correctas 		= 0;
+		$incorrectas 	= 0;
+		$puntos 		= 0;
+		$tiempo 		= DB::table('ws_respuestas')->where('examen_respuesta_id', $examen->examen_id)->sum('tiempo');
 
 		for($i=0; $i < $cant_res; $i++){
 
 			if ($respuestas[$i]->opcion_id) {
 				
-				$opcion = Opcion::find($respuestas[$i]->opcion_id);
+				//$opcion = Opcion::find($respuestas[$i]->opcion_id);
+
+				$consulta 	= 'SELECT * FROM ws_opciones where id=?';
+				$opcion 	= DB::select($consulta, [ $respuestas[$i]->opcion_id ] );
+
+				if (count($opcion) > 0) { $opcion = $opcion[0]; }
+
 
 				if ($opcion->is_correct) {
 					$correctas++;
 
-					$preg_king	= Pregunta_king::find($respuestas[$i]->pregunta_king_id);
-					$puntos_preg = $preg_king['puntos'];
+					//$preg_king	= Pregunta_king::find($respuestas[$i]->pregunta_king_id);
+					$consulta 	= 'SELECT * FROM ws_preguntas_king where deleted_at is null and id=?';
+					$preg_king 	= DB::select($consulta, [ $respuestas[$i]->pregunta_king_id ] );
+
+					if (count($preg_king) > 0) { $preg_king = $preg_king[0]; }
+
+					$puntos_preg = $preg_king->puntos;
 
 					$puntos = $puntos + $puntos_preg;
+				}else{
+					$incorrectas++;
 				}
 
 			}elseif($respuestas[$i]->opcion_agrupada_id){
@@ -80,6 +94,7 @@ class CalculoExamen {
 		$res->promedio 			= $promedio;
 		$res->cantidad_pregs 	= $cantidad_pregs;
 		$res->correctas 		= $correctas;
+		$res->incorrec_reales 	= $incorrectas;
 		$res->tiempo 			= (integer)$tiempo;
 
 		return $res;

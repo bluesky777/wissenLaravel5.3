@@ -157,7 +157,7 @@ class UsersController extends Controller {
 			$usuario->imagen_id 	= $imgUsuario['id'];
 		}
 
-		$usuario 				= User::findOrFail($user_id);
+
 		$usuario->nombres 		= Request::input('nombres');
 		$usuario->apellidos 	= Request::input('apellidos');
 		$usuario->sexo 			= Request::input('sexo');
