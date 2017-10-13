@@ -46,9 +46,11 @@ class Examenes_respuestaController extends Controller {
 		$examen 					= new Examen_respuesta;
 		$examen->inscripcion_id 	= $request->inscripcion_id;
 		$examen->evaluacion_id 		= $evaluacion->id;
+		$examen->idioma_id 			= $user->idioma_main_id;
 		$examen->categoria_id 		= $request->categoria_id;
 		$examen->terminado 			= false;
 		$examen->gran_final 		= $evento->gran_final;
+		$examen->res_by_promedio 	= $evaluacion->puntaje_por_promedio;
 		$examen->save();
 
 

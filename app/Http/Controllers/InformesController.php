@@ -84,7 +84,8 @@ class InformesController extends Controller {
 		$gran_final 	= Request::input('gran_final', false);
 
 		$consulta = 'SELECT e.id as examen_id, e.inscripcion_id, e.evaluacion_id, i.categoria_id, e.active,
-						e.terminado, e.timeout, e.created_at as examen_at, i.user_id, i.allowed_to_answer, i.signed_by, i.created_at as inscrito_at,
+						e.terminado, e.timeout, e.res_by_promedio, e.created_at as examen_at, i.user_id, i.allowed_to_answer, i.signed_by, i.created_at as inscrito_at,
+						e.res_correctas, e.res_incorrectas, e.res_promedio, e.res_puntos, e.res_cant_pregs, e.res_tiempo, e.res_tiempo_format,
 					    u.nombres, u.apellidos, u.sexo, u.username, u.entidad_id,
 					    u.imagen_id, IFNULL(CONCAT("perfil/", im.nombre), IF(u.sexo="F", :female, :male)) as imagen_nombre,
 					    en.nombre as nombre_entidad, en.alias as alias_entidad, en.lider_id, en.lider_nombre, en.alias,
@@ -102,11 +103,6 @@ class InformesController extends Controller {
 					where e.deleted_at is null and e.gran_final='.$gran_final;
 
 		$examenes = DB::select($consulta, [':female'=>User::$default_female, ':male'=>User::$default_male, ':evento_id' => $evento_id, ':idioma_id' => $idioma_id] );
-
-		$cant = count($examenes);
-		for ($i=0; $i < $cant; $i++) { 
-			$examenes[$i]->resultados = CalculoExamen::calcular($examenes[$i]);
-		}
 
 
 		return $examenes;
@@ -139,7 +135,8 @@ class InformesController extends Controller {
 			$entidad_id = $entidades[$j]->entidad_id;
 
 			$consulta_ex = 'SELECT e.id as examen_id, e.inscripcion_id, e.evaluacion_id, i.categoria_id, e.active,
-							e.terminado, e.timeout, e.created_at as examen_at, i.user_id, i.allowed_to_answer, i.signed_by, i.created_at as inscrito_at,
+							e.terminado, e.timeout, e.res_by_promedio, e.created_at as examen_at, i.user_id, i.allowed_to_answer, i.signed_by, i.created_at as inscrito_at,
+						    e.res_correctas, e.res_incorrectas, e.res_promedio, e.res_puntos, e.res_cant_pregs, e.res_tiempo, e.res_tiempo_format,
 						    u.nombres, u.apellidos, u.sexo, u.username, u.entidad_id,
 						    u.imagen_id, IFNULL(CONCAT("perfil/", im.nombre), IF(u.sexo="F", :female, :male)) as imagen_nombre,
 						    ct.nombre as nombre_categ, ct.abrev as abrev_categ, ct.descripcion as descripcion_categ, ct.idioma_id, ct.traducido
@@ -153,11 +150,6 @@ class InformesController extends Controller {
 						where e.deleted_at is null and u.entidad_id=:entidad_id and e.gran_final='.$gran_final;
 
 			$examenes = DB::select($consulta_ex, [':female'=>User::$default_female, ':male'=>User::$default_male, ':evento_id' => $evento_id, ':idioma_id' => $idioma_id, ':entidad_id' => $entidad_id] );
-
-			$cant = count($examenes);
-			for ($i=0; $i < $cant; $i++) { 
-				$examenes[$i]->resultados = CalculoExamen::calcular($examenes[$i]);
-			}
 
 			$entidades[$j]->examenes = $examenes;
 		}
@@ -215,7 +207,8 @@ class InformesController extends Controller {
 				$categoria_id = $categorias[$k]->categoria_id;
 
 				$consulta_ex = 'SELECT e.id as examen_id, e.inscripcion_id, e.evaluacion_id, i.categoria_id, e.active,
-								e.terminado, e.timeout, e.created_at as examen_at, i.user_id, i.allowed_to_answer, i.signed_by, i.created_at as inscrito_at,
+								e.terminado, e.timeout, e.res_by_promedio, e.created_at as examen_at, i.user_id, i.allowed_to_answer, i.signed_by, i.created_at as inscrito_at,
+							    e.res_correctas, e.res_incorrectas, e.res_promedio, e.res_puntos, e.res_cant_pregs, e.res_tiempo, e.res_tiempo_format,
 							    u.nombres, u.apellidos, u.sexo, u.username, u.entidad_id,
 							    u.imagen_id, IFNULL(CONCAT("perfil/", im.nombre), IF(u.sexo="F", :female, :male)) as imagen_nombre,
 							    ct.nombre as nombre_categ, ct.abrev as abrev_categ, ct.descripcion as descripcion_categ, ct.idioma_id, ct.traducido
@@ -229,11 +222,6 @@ class InformesController extends Controller {
 							where e.deleted_at is null and u.entidad_id=:entidad_id and e.gran_final='.$gran_final;
 
 				$examenes = DB::select($consulta_ex, [':female'=>User::$default_female, ':male'=>User::$default_male, ':categoria_id'=>$categoria_id, ':evento_id' => $evento_id, ':idioma_id' => $idioma_id, ':entidad_id' => $entidad_id] );
-
-				$cant = count($examenes);
-				for ($i=0; $i < $cant; $i++) { 
-					$examenes[$i]->resultados = CalculoExamen::calcular($examenes[$i]);
-				}
 
 				$categorias[$k]->examenes = $examenes;
 
@@ -278,7 +266,8 @@ class InformesController extends Controller {
 
 				
 			$consulta_ex = 'SELECT e.id as examen_id, e.inscripcion_id, e.evaluacion_id, i.categoria_id, e.active,
-							e.terminado, e.timeout, e.created_at as examen_at, i.user_id, i.allowed_to_answer, i.signed_by, i.created_at as inscrito_at,
+							e.terminado, e.timeout, e.res_by_promedio, e.created_at as examen_at, i.user_id, i.allowed_to_answer, i.signed_by, i.created_at as inscrito_at,
+						    e.res_correctas, e.res_incorrectas, e.res_promedio, e.res_puntos, e.res_cant_pregs, e.res_tiempo, e.res_tiempo_format,
 						    u.nombres, u.apellidos, u.sexo, u.username, u.entidad_id,
 						    u.imagen_id, IFNULL(CONCAT("perfil/", im.nombre), IF(u.sexo="F", :female, :male)) as imagen_nombre,
 						    en.nombre as nombre_entidad, en.alias as alias_entidad, en.lider_id, en.lider_nombre, en.alias,
@@ -296,11 +285,6 @@ class InformesController extends Controller {
 						where e.deleted_at is null  and e.gran_final='.$gran_final;
 
 			$examenes = DB::select($consulta_ex, [':female'=>User::$default_female, ':male'=>User::$default_male, ':categoria_id'=>$categoria_id, ':evento_id' => $evento_id, ':idioma_id' => $idioma_id ] );
-
-			$cant = count($examenes);
-			for ($i=0; $i < $cant; $i++) { 
-				$examenes[$i]->resultados = CalculoExamen::calcular($examenes[$i]);
-			}
 
 			$categorias[$j]->examenes = $examenes;
 
@@ -341,7 +325,8 @@ class InformesController extends Controller {
 
 				
 			$consulta_ex = 'SELECT e.id as examen_id, e.inscripcion_id, e.evaluacion_id, i.categoria_id, e.active,
-							e.terminado, e.timeout, e.created_at as examen_at, i.user_id, i.allowed_to_answer, i.signed_by, i.created_at as inscrito_at,
+							e.terminado, e.timeout, e.res_by_promedio, e.created_at as examen_at, i.user_id, i.allowed_to_answer, i.signed_by, i.created_at as inscrito_at,
+						    e.res_correctas, e.res_incorrectas, e.res_promedio, e.res_puntos, e.res_cant_pregs, e.res_tiempo, e.res_tiempo_format,
 						    u.nombres, u.apellidos, u.sexo, u.username, u.entidad_id,
 						    u.imagen_id, IFNULL(CONCAT("perfil/", im.nombre), IF(u.sexo="F", :female, :male)) as imagen_nombre,
 						    en.nombre as nombre_entidad, en.alias as alias_entidad, en.lider_id, en.lider_nombre, en.alias,
@@ -359,11 +344,6 @@ class InformesController extends Controller {
 						where e.deleted_at is null  and e.gran_final='.$gran_final;
 
 			$examenes = DB::select($consulta_ex, [':female'=>User::$default_female, ':male'=>User::$default_male, ':categoria_id'=>$categoria_id, ':evento_id' => $evento_id, ':idioma_id' => $idioma_id ] );
-
-			$cant = count($examenes);
-			for ($i=0; $i < $cant; $i++) { 
-				$examenes[$i]->resultados = CalculoExamen::calcular($examenes[$i]);
-			}
 
 			$categorias[$j]->examenes = $examenes;
 

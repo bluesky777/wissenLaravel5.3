@@ -47,7 +47,7 @@ class CreateWsevaluacionesTable extends Migration {
             $table->string('tipo_pregunta')->nullable(); // Test, Multiple, Texto, Lista, Ordenar, Cuadrícula
             $table->integer('duracion')->unsigned()->nullable(); // En segundos
             $table->integer('categoria_id')->unsigned(); 
-            $table->integer('puntos')->unsigned()->nullable(); // Si el puntaje de la evaluación se saca por promedio, este valor no se toma.  
+            $table->integer('puntos')->unsigned()->default(0); // Si el puntaje de la evaluación se saca por promedio, este valor no se toma.  
             $table->boolean('aleatorias')->default(false)->nullable(); // Si true, las opciones no necesariamente saldrán como se hayan creado, sino de manera aleatoria.
             $table->integer('added_by')->unsigned()->nullable();
             $table->integer('deleted_by')->unsigned()->nullable();
@@ -157,7 +157,7 @@ class CreateWsevaluacionesTable extends Migration {
             $table->integer('contenido_id')->unsigned();
             $table->integer('duracion')->unsigned()->nullable(); // En segundos
             $table->string('tipo_pregunta')->nullable(); // Test, Multiple, Texto, Lista, Ordenar, Cuadrícula
-            $table->integer('puntos')->unsigned()->nullable();
+            $table->integer('puntos')->unsigned()->default(0);
             $table->boolean('aleatorias')->default(false)->nullable(); // Si true, las opciones no necesariamente saldrán como se hayan creado, sino de manera aleatoria.
             $table->integer('orden')->unsigned()->nullable(); // Orden de la pregunta dentro del grupo de preguntas.
             $table->integer('added_by')->unsigned()->nullable();

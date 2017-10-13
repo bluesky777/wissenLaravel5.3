@@ -52,6 +52,7 @@ class CreateWseventosTable extends Migration {
             $table->integer('nivel_id')->unsigned()->nullable(); // No puedo volverla foránea
             $table->integer('pagado')->nullable(); // Dinero pagado por el usuario en este evento.
             $table->boolean('pazysalvo')->nullable()->default(false); // Dinero pagado por el usuario en este evento.
+            $table->boolean('ganador')->default(false); // Para saber si ganó en esta etapa.
             $table->integer('signed_by')->unsigned()->nullable();
             $table->timestamps();
         });
