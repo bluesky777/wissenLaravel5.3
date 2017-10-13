@@ -331,10 +331,10 @@ class PuestosController extends Controller {
 	public function putExamenesEjecutandose(){
 		$user 				= User::fromToken();
 		$ids_participantes 	= Request::input('ids');
-		/*
+		
 		if (!$ids_participantes) {
-			return '';
-		}*/
+			return ['pailas'=>'Deben haber personas haciendo examenes'];
+		}
 
 		$cant_ids 			= count($ids_participantes);
 
@@ -363,7 +363,7 @@ class PuestosController extends Controller {
 							inner join ws_categorias_king ck on ck.id=i.categoria_id and ck.deleted_at is null
 							left join ws_categorias_traduc ct on ck.id=ct.categoria_id and ct.idioma_id=e.idioma_id and ct.deleted_at is null
 							left join images im on im.id=u.imagen_id and im.deleted_at is null 
-							where e.deleted_at is null and (e.id>2111)';
+							where e.deleted_at is null and ('.$condicionales.')';
 	
 		$examenes = DB::select($consulta_ex, [':female'=>User::$default_female, ':male'=>User::$default_male ] );
 

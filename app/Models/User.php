@@ -80,9 +80,9 @@ class User extends Authenticatable {
 
 
 
-    public static $default_female = 'perfil/system/avatars/female1.png';
-    public static $default_male = 'perfil/system/avatars/male1.png';
-    public static $perfil_path = 'perfil/';
+    public static $default_female 	= 'perfil/system/avatars/female1.png';
+    public static $default_male 	= 'perfil/system/avatars/male1.png';
+    public static $perfil_path 		= 'perfil/';
 
 
 
@@ -92,8 +92,8 @@ class User extends Authenticatable {
 
 	public static function fromToken($already_parsed=false)
 	{
-		$usuario = [];
-		$token = [];
+		$usuario 	= [];
+		$token 		= [];
 		try
 		{
 			if ($already_parsed) {

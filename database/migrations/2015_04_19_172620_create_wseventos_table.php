@@ -26,6 +26,7 @@ class CreateWseventosTable extends Migration {
             $table->boolean('with_pay')->nullable();
             $table->boolean('por_sumatoria_puntos')->default(false)->nullable(); // Los resultados se sacarán por sumar cada punto obtenido o por promediar las correctas entre la cantidad.
             $table->boolean('actual')->default(false)->nullable();
+            $table->boolean('mostrar_si_acierta')->default(false);
             $table->integer('precio1')->nullable();
             $table->integer('precio2')->nullable();
             $table->integer('precio3')->nullable();

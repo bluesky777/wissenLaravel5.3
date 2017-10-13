@@ -33,11 +33,11 @@ class UsersTableSeeder extends Seeder
 		$this->command->info('Creando usuarios de prueba ...');
 		$Newuser = new User;
 		$Newuser->id 				= 2;
-		$Newuser->username 			= 'pr';
-		$Newuser->nombres 			= 'Probador';
-		$Newuser->apellidos 		= 'Del Sistema';
+		$Newuser->username 			= 'presentador';
+		$Newuser->nombres 			= 'Maestro';
+		$Newuser->apellidos 		= 'De Ceremonia';
 		$Newuser->email 			= 'pr@wissen.com';
-		$Newuser->password 			= Hash::make('123');
+		$Newuser->password 			= Hash::make('6651');
 		$Newuser->sexo 				= 'M';
 		$Newuser->is_superuser 		= false;
 		$Newuser->entidad_id 		= 1;
