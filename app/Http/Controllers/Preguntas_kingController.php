@@ -38,13 +38,13 @@ class Preguntas_kingController extends Controller {
 
 
 		$consulta = 'SELECT * FROM (	
-						SELECT pk.id as pg_id, TRUE as is_preg, pk.descripcion, pk.tipo_pregunta, pk.categoria_id, pk.aleatorias, pk.added_by, pk.created_at as gp_created_at, pk.updated_at as gp_updated_at, 
+						SELECT pk.id as pg_id, TRUE as is_preg, pk.descripcion, pk.tipo_pregunta, pk.duracion, pk.categoria_id, pk.puntos, pk.aleatorias, pk.added_by, pk.created_at as gp_created_at, pk.updated_at as gp_updated_at, 
 							pt.id as pg_traduc_id, pt.enunciado, NULL as definicion, pt.ayuda, pt.idioma_id, pt.texto_arriba, pt.texto_abajo, pt.traducido, pt.updated_at as pgt_updated_at
 						FROM ws_preguntas_king pk
 						INNER JOIN ws_pregunta_traduc pt on pt.pregunta_id=pk.id and pt.idioma_id=:idioma_id and pt.deleted_at is null
 						WHERE pk.categoria_id=:categoria_id AND pk.deleted_at is null
 					union
-						SELECT gp.id as pg_id, FALSE as is_preg, gp.descripcion, NULL as tipo_pregunta, gp.categoria_id, NULL as aleatorias, gp.added_by, gp.created_at as gp_created_at, gp.updated_at as gp_updated_at,
+						SELECT gp.id as pg_id, FALSE as is_preg, gp.descripcion, NULL as tipo_pregunta, NULL as duracion, gp.categoria_id, NULL as puntos, NULL as aleatorias, gp.added_by, gp.created_at as gp_created_at, gp.updated_at as gp_updated_at,
 							ct.id as pg_traduc_id, NULL as enunciado, ct.definicion, NULL as ayuda, ct.idioma_id, NULL as texto_arriba, NULL as texto_abajo, ct.traducido, ct.updated_at as pgt_updated_at
 						FROM ws_grupos_preguntas gp
 						INNER JOIN ws_contenido_traduc ct on ct.grupo_pregs_id=gp.id and ct.idioma_id=:idioma_id2 and ct.deleted_at is null
@@ -102,7 +102,7 @@ class Preguntas_kingController extends Controller {
 		$pregunta_id 	= $request->input('pregunta_id');
 
 
-		$consulta = 'SELECT pk.id as pg_id, pk.descripcion, pk.tipo_pregunta, pk.categoria_id, pk.aleatorias, pk.added_by, pk.created_at as gp_created_at, pk.updated_at as gp_updated_at, 
+		$consulta = 'SELECT pk.id as pg_id, pk.descripcion, pk.tipo_pregunta, pk.duracion, pk.categoria_id, pk.puntos, pk.aleatorias, pk.added_by, pk.created_at as gp_created_at, pk.updated_at as gp_updated_at, 
 						pt.id as pg_traduc_id, pt.enunciado, pt.ayuda, pt.idioma_id, pt.texto_arriba, pt.texto_abajo, pt.traducido, pt.updated_at as pgt_updated_at,
 						idi.nombre as idioma, idi.original as idioma_original, idi.abrev as idioma_abrev
 					FROM ws_preguntas_king pk
@@ -145,6 +145,7 @@ class Preguntas_kingController extends Controller {
 		$pre_king->tipo_pregunta 	= 'Test';
 		$pre_king->categoria_id 	= $categoria_id;
 		$pre_king->aleatorias 		= false;
+		$pre_king->puntos 			= 1;
 		$pre_king->added_by 		= $user->id;
 		$pre_king->save();
 
@@ -201,7 +202,7 @@ class Preguntas_kingController extends Controller {
 
 
 		// Traemos la pregunta creada con sus datos traducidos
-		$consulta = 'SELECT pk.id as pg_id, TRUE as is_preg, pk.descripcion, pk.tipo_pregunta, pk.categoria_id, pk.aleatorias, pk.added_by, pk.created_at as gp_created_at, pk.updated_at as gp_updated_at, 
+		$consulta = 'SELECT pk.id as pg_id, TRUE as is_preg, pk.descripcion, pk.tipo_pregunta, pk.duracion, pk.categoria_id, pk.puntos, pk.aleatorias, pk.added_by, pk.created_at as gp_created_at, pk.updated_at as gp_updated_at, 
 						pt.id as pg_traduc_id, pt.enunciado, NULL as definicion, pt.ayuda, pt.idioma_id, pt.texto_arriba, pt.texto_abajo, pt.traducido, pt.updated_at as pgt_updated_at
 					FROM ws_preguntas_king pk
 					INNER JOIN ws_pregunta_traduc pt on pt.pregunta_id=pk.id and pt.idioma_id=:idioma_id and pt.deleted_at is null
@@ -344,6 +345,26 @@ class Preguntas_kingController extends Controller {
 		$preg_king->delete();
 
 		return $preg_king;
+	}
+
+	public function putDestroyVarias(Request $request)
+	{
+		$user = User::fromToken();
+		
+		$pregs_solicitadas 	= $request->input('preguntas');
+		$cant_eliminadas 	= 0;
+
+		for ($i=0; $i < count($pregs_solicitadas); $i++) { 
+			if ($pregs_solicitadas[$i]['is_preg']) {
+				$preg_king = Pregunta_king::findOrFail($pregs_solicitadas[$i]['pg_id']);
+				$preg_king->delete();
+				$cant_eliminadas++;
+			}
+			
+		}
+		
+
+		return $cant_eliminadas;
 	}
 
 }

@@ -38,16 +38,16 @@ class CategoriasController extends Controller {
 
 		$consulta = 'SELECT * FROM ws_categorias_king where evento_id = :evento_id and deleted_at is null';
 
-		$categs_trads = \DB::select($consulta, [':evento_id' => $evento_id] );
+		$categorias = \DB::select($consulta, [':evento_id' => $evento_id] );
 
 
-		$categoria 	= Categoria_king::where('evento_id', $evento_id)->get();
+		//$categoria 	= Categoria_king::where('evento_id', $evento_id)->get();
 
 		
-		Categoria_traduc::traducciones($categoria); // Paso por referencia la categoria_king
+		Categoria_traduc::traducciones($categorias); // Paso por referencia la categoria_king
 		
 
-		return $categoria;
+		return $categorias;
 	}
 
 

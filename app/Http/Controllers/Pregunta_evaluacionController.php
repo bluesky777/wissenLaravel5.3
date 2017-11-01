@@ -57,19 +57,71 @@ class Pregunta_evaluacionController extends Controller {
 	}
 
 
+	public function putAsignarPreguntas(Request $request)
+	{
+		$user 			= User::fromToken();
+		$evento_id 		= Evento::actual()->id;
+
+		$evaluacion_id 	= $request->input('evaluacion_id');
+		$preguntas 		= $request->input('preguntas');
+		$pregs_eval 	= DB::select('SELECT id,  IFNULL(pregunta_id, grupo_pregs_id) as pg_id, IF(pregunta_id, true, false) as is_preg FROM ws_pregunta_evaluacion WHERE evaluacion_id=?', [$evaluacion_id]);
+		$cant_evals 	= count($pregs_eval);
+		$cant_solic 	= count($preguntas);
+
+		$preguntas_reales = [];
+
+		for ($i=0; $i < $cant_solic; $i++) { 
+			$is_already = false;
+			for ($j=0; $j < $cant_evals; $j++) { 
+
+				if ( ($preguntas[$i]['is_preg']==$pregs_eval[$j]->is_preg) && ($preguntas[$i]['pg_id']==$pregs_eval[$j]->pg_id) ) {
+					$is_already = true;
+				}
+				
+			}
+			if(!$is_already){
+				array_push($preguntas_reales, $preguntas[$i]);
+			}
+		}
+
+		$contador 			= $cant_evals + 1;
+		$cant_real 			= count($preguntas_reales);
+		$preg_evalu_nuevos 	= [];
+		for ($i=0; $i < $cant_real; $i++) { 
+
+			$preg_eval 					= new Pregunta_evaluacion;
+			$preg_eval->evaluacion_id 	= $evaluacion_id;
+			$preg_eval->added_by 		= $user->id;
+			$preg_eval->orden 			= $contador;
+			
+			if ($preguntas_reales[$i]['is_preg']) {
+				$preg_eval->pregunta_id 	= $preguntas_reales[$i]['pg_id'];
+			}else{
+				$preg_eval->grupo_pregs_id 	= $preguntas_reales[$i]['pg_id'];
+			}
+			$preg_eval->save();
+			array_push($preg_evalu_nuevos, $preg_eval);
+			$contador++;
+		}
+			
+
+
+		return $preg_evalu_nuevos;
+	}
+
+
 	public function putQuitarPregunta(Request $request)
 	{
-		$user = User::fromToken();
-		$evento_id = Evento::actual()->id;
+		$user 		= User::fromToken();
+		$evento_id 	= Evento::actual()->id;
 
-		$evaluacion_id = $request->input('evaluacion_id');
-		$pregunta_id = $request->input('pregunta_id');
-		$pregunta_eval_id = $request->input('pregunta_eval_id');
+		$evaluacion_id 		= $request->input('evaluacion_id');
+		$pregunta_id 		= $request->input('pregunta_id');
+		$pregunta_eval_id 	= $request->input('pregunta_eval_id');
 
 
 
 		$preg_eval = Pregunta_evaluacion::find($pregunta_eval_id);
-
 		$preg_eval->delete();
 
 		return 'Quitada con éxito.';
@@ -271,6 +323,21 @@ class Pregunta_evaluacionController extends Controller {
 
 
 		return $examenes_puntajes;
+	}
+
+
+
+
+	public function putActualizarOrdenPregunta(Request $request)
+	{
+		$user 			= User::fromToken();
+		$pregunta_eval_id 	= $request->input('pregunta_eval_id');
+		$pg_id 			= $request->input('pg_id');
+		$orden 			= $request->input('orden');
+
+		$pregun_eva 	= DB::update('UPDATE ws_pregunta_evaluacion SET orden=? WHERE id=?', [$orden, $pregunta_eval_id]);
+
+		return 'Ordenado';
 	}
 
 

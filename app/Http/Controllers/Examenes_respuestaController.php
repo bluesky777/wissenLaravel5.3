@@ -128,7 +128,8 @@ class Examenes_respuestaController extends Controller {
 			return 'Ya respondida'; // El texto debe ser exacto.
 		}
 		
-
+		$puntos = 0;
+		
 		if ($pregunta_king->tipo_pregunta == 'Test') { // Solo una opción es correcta
 			if ($opcion) {
 				if ($opcion->is_correct) {

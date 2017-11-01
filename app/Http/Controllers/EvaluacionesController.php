@@ -32,13 +32,13 @@ class EvaluacionesController extends Controller {
 		$evaluaciones = [];
 
 		if ($categoria_id) {
-			$evaluaciones = Evaluacion::where('categoria_id', $categoria_id)
-						->where('evento_id', $evento_id)
-						->get();
+			$consulta 		= 'SELECT * FROM ws_evaluaciones where categoria_id = :categoria_id and evento_id = :evento_id and deleted_at is null';
+			$evaluaciones 	= \DB::select($consulta, [':categoria_id' => $categoria_id, ':evento_id' => $evento_id] );
+			
 		}else{
-			$evaluaciones = Evaluacion::orderBy('categoria_id')
-						->where('evento_id', $evento_id)
-						->get();
+			$consulta 		= 'SELECT * FROM ws_evaluaciones where evento_id = :evento_id and deleted_at is null order by categoria_id';
+			$evaluaciones 	= \DB::select($consulta, [':evento_id' => $evento_id] );
+			
 		}
 
 
@@ -48,7 +48,8 @@ class EvaluacionesController extends Controller {
 
 			$evaluacion = $evaluaciones[$i];
 
-			$pregs_eval = Pregunta_evaluacion::where('evaluacion_id', $evaluacion->id)->get();
+			$consulta 		= 'SELECT * FROM ws_pregunta_evaluacion where evaluacion_id = :evaluacion_id';
+			$pregs_eval 	= \DB::select($consulta, [':evaluacion_id' => $evaluacion->id] );
 			
 			$evaluacion->preguntas_evaluacion = $pregs_eval;
 
