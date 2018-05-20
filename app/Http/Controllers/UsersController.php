@@ -22,7 +22,12 @@ use DB;
 
 
 class UsersController extends Controller {
-
+	
+	//Para probar ngx-admin
+	public function getIndex2()
+	{
+		return User::all();
+	}
 
 	public function getIndex()
 	{
@@ -59,8 +64,20 @@ class UsersController extends Controller {
 		return $usuarios;
 	}
 
+	/*
+	// http://localhost/wissenLaravel/public/api/usuarios/cambiar-pass
+	public function getCambiarPass()
+	{
+		//$user = User::fromToken();
+		
+		$usu = User::find(1);
+		$usu->password = Hash::make('sub');
+		$usu->save();
+		return "Contraseña cambiada";
 
-
+	}
+	*/
+	
 	public function putCambiarPass()
 	{
 		$user = User::fromToken();
