@@ -60,6 +60,7 @@ Route::group(['prefix' => 'api'], function () {
 	AdvancedRoute::controller('informes-infor', 'informes\DatosController');
 	AdvancedRoute::controller('puestos', 'informes\PuestosController');
 	AdvancedRoute::controller('exportar-importar', 'ExportarImportar\ExportarImportarController');
+	AdvancedRoute::controller('datos-laravel', 'ExportarImportar\DatosElectronController');
 
 
 	AdvancedRoute::controller('login', 'LoginController');
