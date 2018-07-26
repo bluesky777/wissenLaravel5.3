@@ -40,10 +40,6 @@ class CategoriasController extends Controller {
 
 		$categorias = \DB::select($consulta, [':evento_id' => $evento_id] );
 
-
-		//$categoria 	= Categoria_king::where('evento_id', $evento_id)->get();
-
-		
 		Categoria_traduc::traducciones($categorias); // Paso por referencia la categoria_king
 		
 

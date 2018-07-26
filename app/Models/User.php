@@ -196,7 +196,7 @@ class User extends Authenticatable {
 		// Si es Pantalla, mandamos las categorías del evento
 		if ($usuario->hasRole('Pantalla')) {
 			$categorias_evento = Categoria_king::where('evento_id', $evento_id)->get();
-			Categoria_traduc::traducciones($categorias_evento); // Paso por referencia la categoria_king
+			Categoria_traduc::traducciones($categorias_evento); // Paso por referencia las categorias_king
 			$usuario->categorias_evento = $categorias_evento;
 		}
 
@@ -220,7 +220,7 @@ class User extends Authenticatable {
 
 			if (!$registrado_en_actual) {
 				$ultimo = count($eventos_resgistrados)-1;
-				$usuario->evento_actual = Evento::one( $eventos_resgistrados[ $ultimo ]->evento_id ); // trabajo en el último evento al que se inscribió
+				$usuario->evento_actual = Evento::one( $eventos_resgistrados[ $ultimo ]->evento_id ); // que trabaje en el último evento al que se inscribió
 			}
 
 		}

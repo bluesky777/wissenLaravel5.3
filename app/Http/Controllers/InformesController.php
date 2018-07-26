@@ -35,8 +35,8 @@ class InformesController extends Controller {
 
 	public function getMisExamenes()
 	{
-		$user = User::fromToken();
-		$evento_id = $user->evento_selected_id;
+		$user 		= User::fromToken();
+		$evento_id 	= $user->evento_selected_id;
 
 		
 		$consulta = 'SELECT i.*, ct.categoria_id, ct.nombre, ct.abrev, ct.descripcion, ct.idioma_id, ct.traducido 

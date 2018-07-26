@@ -45,7 +45,7 @@ class Inscripcion extends Model {
 
 		if (count($inscripcion) > 0 ) {
 
-			// Si no es null, lo pondrémos null para activarlo
+			// Si no es null, lo pondremos null para activarlo
 			if (is_null($inscripcion[0]->deleted_at)) {
 				// Ya está inscripto y activo, no hay problema supuestamente
 			}else{
@@ -84,8 +84,8 @@ class Inscripcion extends Model {
 	{
 		// Traer la inscripción si existe, esté eliminada o activa.
 		$consulta = 'SELECT i.id, i.categoria_id, i.allowed_to_answer, i.deleted_at
-						FROM ws_inscripciones i 
-						where i.user_id=:user_id and i.categoria_id=:categoria_id';
+				FROM ws_inscripciones i 
+				where i.user_id=:user_id and i.categoria_id=:categoria_id';
 
 		$inscripcion = \DB::select(\DB::raw($consulta), array(':user_id' => $user_id, ':categoria_id' => $categoria_id) );
 		return $inscripcion;
@@ -95,8 +95,8 @@ class Inscripcion extends Model {
 	{
 		// Traer la inscripción activa.
 		$consulta = 'SELECT i.id, i.categoria_id, i.user_id, i.allowed_to_answer, i.deleted_at
-						FROM ws_inscripciones i 
-						where i.user_id=:user_id and i.categoria_id=:categoria_id and i.deleted_at is null';
+				FROM ws_inscripciones i 
+				where i.user_id=:user_id and i.categoria_id=:categoria_id and i.deleted_at is null';
 
 		$inscripcion = \DB::select($consulta, [':user_id' => $user_id, ':categoria_id' => $categoria_id] );
 		if (count($inscripcion)>0){
