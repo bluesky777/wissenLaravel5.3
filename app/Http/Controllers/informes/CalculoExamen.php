@@ -78,11 +78,13 @@ class CalculoExamen {
 					$consulta 	= 'SELECT * FROM ws_preguntas_king where deleted_at is null and id=?';
 					$preg_king 	= DB::select($consulta, [ $respuestas[$i]->pregunta_king_id ] );
 
-					if (count($preg_king) > 0) { $preg_king = $preg_king[0]; }
+					if (count($preg_king) > 0) { 
+						$preg_king = $preg_king[0]; 
+					
+						$puntos_preg = $preg_king->puntos;
 
-					$puntos_preg = $preg_king->puntos;
+						$puntos = $puntos + $puntos_preg;}
 
-					$puntos = $puntos + $puntos_preg;
 				}else{
 					$incorrectas++;
 				}

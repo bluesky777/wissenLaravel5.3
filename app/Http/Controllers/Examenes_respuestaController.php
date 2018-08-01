@@ -128,7 +128,6 @@ class Examenes_respuestaController extends Controller {
 			return 'Ya respondida'; // El texto debe ser exacto.
 		}
 		
-		$puntos = 0;
 		
 		if ($pregunta_king->tipo_pregunta == 'Test') { // Solo una opción es correcta
 			if ($opcion) {
@@ -142,7 +141,7 @@ class Examenes_respuestaController extends Controller {
 
 
 		$res = new Respuesta;
-		$res->examen_respuesta_id	= $request->input('examen_actual_id');
+		$res->examen_respuesta_id	= $examen_actual_id;
 		$res->pregunta_king_id		= $preg_king_id;
 		$res->tiempo				= $request->input('tiempo');
 		$res->tiempo_aproximado		= $request->input('tiempo_aproximado');
