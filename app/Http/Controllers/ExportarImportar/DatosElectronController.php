@@ -30,11 +30,12 @@ class DatosElectronController extends Controller {
 		
 		$now 			= Carbon::now('America/Bogota');
 		$resultado 		= [];
+		$evento_id 		= Request::input('evento_id', 1);
 		
 		
 		// Niveles
-		$consulta = 'SELECT id as rowid, id, nombre, evento_id FROM ws_niveles_king WHERE deleted_at is null AND evento_id=1 ';
-		$niveles = DB::select($consulta);
+		$consulta = 'SELECT id as rowid, id, nombre, evento_id FROM ws_niveles_king WHERE deleted_at is null AND evento_id=? ';
+		$niveles = DB::select($consulta, [$evento_id]);
 		$resultado['niveles'] = $niveles;
 		
 		
@@ -45,8 +46,8 @@ class DatosElectronController extends Controller {
 		
 		
 		// Disciplinas 
-		$consulta = 'SELECT id as rowid, id, nombre, evento_id FROM ws_disciplinas_king WHERE deleted_at is null AND evento_id=1 ';
-		$disciplinas = DB::select($consulta);
+		$consulta = 'SELECT id as rowid, id, nombre, evento_id FROM ws_disciplinas_king WHERE deleted_at is null AND evento_id=? ';
+		$disciplinas = DB::select($consulta, [$evento_id]);
 		$resultado['disciplinas'] = $disciplinas;
 
 		
@@ -59,8 +60,8 @@ class DatosElectronController extends Controller {
 		
 
 		// Categorías
-		$consulta = 'SELECT id as rowid, id, nombre, nivel_id, disciplina_id, evento_id FROM  ws_categorias_king WHERE deleted_at is null AND evento_id=1 ';
-		$categorias = DB::select($consulta);
+		$consulta = 'SELECT id as rowid, id, nombre, nivel_id, disciplina_id, evento_id FROM  ws_categorias_king WHERE deleted_at is null AND evento_id=? ';
+		$categorias = DB::select($consulta, [$evento_id]);
 		$resultado['categorias'] = $categorias;
 
 		
@@ -74,13 +75,13 @@ class DatosElectronController extends Controller {
 		
 		// Entidades
 		$consulta = 'SELECT e.id as rowid, e.id, e.nombre, e.lider_id, e.lider_nombre, e.logo_id, e.telefono, e.alias, e.evento_id, e.logo_id
-					FROM ws_entidades e WHERE e.evento_id=1 and e.deleted_at is null';
-		$enti = DB::select($consulta);
+					FROM ws_entidades e WHERE e.evento_id=? and e.deleted_at is null';
+		$enti = DB::select($consulta, [$evento_id]);
 		$resultado['entidades'] = $enti;
 		
 		
-		$consulta 		= 'SELECT id as rowid, id, categoria_id, evento_id, actual, descripcion, duracion_preg, duracion_exam, one_by_one, puntaje_por_promedio FROM ws_evaluaciones WHERE evento_id = 1 and actual=1 and deleted_at is null';
-		$evaluaciones 	= DB::select($consulta);
+		$consulta 		= 'SELECT id as rowid, id, categoria_id, evento_id, actual, descripcion, duracion_preg, duracion_exam, one_by_one, puntaje_por_promedio FROM ws_evaluaciones WHERE evento_id = ? and actual=1 and deleted_at is null';
+		$evaluaciones 	= DB::select($consulta, [$evento_id]);
 		$resultado['evaluaciones'] = $evaluaciones;
 		
 		
@@ -90,8 +91,10 @@ class DatosElectronController extends Controller {
 		$consulta = 'SELECT pk.id as rowid, pk.id, pk.descripcion, pk.tipo_pregunta, pk.duracion, pk.categoria_id, pk.puntos, pk.aleatorias, pk.added_by
 			FROM ws_preguntas_king pk
 			INNER JOIN ws_pregunta_evaluacion pev on pev.pregunta_id=pk.id and pk.deleted_at is null 
-			INNER JOIN ws_evaluaciones ev on ev.id=pev.evaluacion_id and ev.evento_id=1 and ev.actual=1 and ev.deleted_at is null';
-		$preguntas = DB::select($consulta);
+			INNER JOIN ws_evaluaciones ev on ev.id=pev.evaluacion_id and ev.evento_id=? and ev.actual=1 and ev.deleted_at is null 
+			WHERE ev.categoria_id!=9 and ev.categoria_id!=10 and ev.categoria_id!=11';
+			// Para que NO traiga las preguntas de religión
+		$preguntas = DB::select($consulta, [$evento_id]);
 		$resultado['preguntas'] = $preguntas;
 
 		
@@ -100,8 +103,8 @@ class DatosElectronController extends Controller {
 			FROM ws_pregunta_traduc p
 			INNER JOIN ws_preguntas_king pk on pk.id=p.pregunta_id and p.deleted_at is null and pk.deleted_at is null and p.idioma_id=1
 			INNER JOIN ws_pregunta_evaluacion pev on pev.pregunta_id=pk.id
-			INNER JOIN ws_evaluaciones ev on ev.id=pev.evaluacion_id and ev.evento_id=1 and ev.actual=1 and ev.deleted_at is null';
-		$preguntas_traducidas 				= DB::select($consulta);
+			INNER JOIN ws_evaluaciones ev on ev.id=pev.evaluacion_id and ev.evento_id=? and ev.actual=1 and ev.deleted_at is null';
+		$preguntas_traducidas 				= DB::select($consulta, [$evento_id]);
 		$resultado['preguntas_traducidas'] 	= $preguntas_traducidas;
 		
 		
@@ -111,16 +114,16 @@ class DatosElectronController extends Controller {
 			INNER JOIN ws_pregunta_traduc p on p.id=o.pregunta_traduc_id and p.deleted_at is null
 			INNER JOIN ws_preguntas_king pk on pk.id=p.pregunta_id and pk.deleted_at is null and p.idioma_id=1
 			INNER JOIN ws_pregunta_evaluacion pev on pev.pregunta_id=pk.id
-			INNER JOIN ws_evaluaciones ev on ev.id=pev.evaluacion_id and ev.evento_id=1 and ev.actual=1 and ev.deleted_at is null';
-		$opciones = DB::select($consulta);
+			INNER JOIN ws_evaluaciones ev on ev.id=pev.evaluacion_id and ev.evento_id=? and ev.actual=1 and ev.deleted_at is null';
+		$opciones = DB::select($consulta, [$evento_id]);
 		$resultado['opciones'] 	= $opciones;
 
 
 		
 		$consulta = 'SELECT o.id as rowid, o.id, o.evaluacion_id, o.pregunta_id, o.grupo_pregs_id, o.orden, o.aleatorias, o.added_by 
 			FROM ws_pregunta_evaluacion o
-			INNER JOIN ws_evaluaciones ev on ev.id=o.evaluacion_id and ev.evento_id=1 and ev.actual=1 and ev.deleted_at is null';
-		$pregunta_evaluacion = DB::select($consulta);
+			INNER JOIN ws_evaluaciones ev on ev.id=o.evaluacion_id and ev.evento_id=? and ev.actual=1 and ev.deleted_at is null';
+		$pregunta_evaluacion = DB::select($consulta, [$evento_id]);
 		$resultado['pregunta_evaluacion'] 	= $pregunta_evaluacion;
 
 

@@ -423,6 +423,7 @@ class InformesController extends Controller {
 
 
 		$examen->promedio 		= $promedio;
+		$examen->examen_id 		= $examen_id;
 		$examen->cantidad_pregs = $cantidad_pregs;
 		$examen->correctas 		= $correctas;
 		$examen->user 			= $user;

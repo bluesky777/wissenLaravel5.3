@@ -27,7 +27,7 @@ class CreateWsexamenesTable extends Migration {
             $table->boolean('active')->default(true);
             $table->boolean('gran_final')->default(false); // Dice si el examen fue hecho en eliminatoria o como gran final.
             $table->boolean('terminado')->default(false); // Indica si finalizó todas las preguntas o si se le acabó el tiempo
-            $table->boolean('timeout')->default(true); // Se le acabó el tiempo??
+            $table->boolean('timeout')->default(false); // Se le acabó el tiempo??
             
             $table->integer('res_correctas')->nullable(); // Al calcular los resultados, cuántas correctas obtuvo
             $table->integer('res_incorrectas')->nullable(); 

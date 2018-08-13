@@ -77,7 +77,6 @@ class Examenes_respuestaController extends Controller {
 	public function putContinuar(Request $request)
 	{
 		$user = User::fromToken();
-		$evento_id = Evento::actual()->id;
 
 
 		$exa_resp_id = $request->input('exa_resp_id');
