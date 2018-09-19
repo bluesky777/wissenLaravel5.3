@@ -116,13 +116,7 @@ class DisciplinasController extends Controller {
 	}
 
 
-	public function putUpdate($id)
-	{
-		//
-	}
 
-
-	
 	public function deleteDestroy($id)
 	{
 		$disciplina = Disciplina_king::find($id);

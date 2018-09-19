@@ -31,6 +31,7 @@ class DatosElectronController extends Controller {
 		$now 			= Carbon::now('America/Bogota');
 		$resultado 		= [];
 		$evento_id 		= Request::input('evento_id', 1);
+		$todas_pregs 	= Request::input('todas_pregs', 0);
 		
 		
 		// Niveles
@@ -88,22 +89,33 @@ class DatosElectronController extends Controller {
 		
 		
 		// PREGUNTAS
-		$consulta = 'SELECT pk.id as rowid, pk.id, pk.descripcion, pk.tipo_pregunta, pk.duracion, pk.categoria_id, pk.puntos, pk.aleatorias, pk.added_by
-			FROM ws_preguntas_king pk
-			INNER JOIN ws_pregunta_evaluacion pev on pev.pregunta_id=pk.id and pk.deleted_at is null 
-			INNER JOIN ws_evaluaciones ev on ev.id=pev.evaluacion_id and ev.evento_id=? and ev.actual=1 and ev.deleted_at is null 
-			WHERE ev.categoria_id!=9 and ev.categoria_id!=10 and ev.categoria_id!=11';
-			// Para que NO traiga las preguntas de religión
+		if ($todas_pregs) {
+			$consulta = 'SELECT pk.id as rowid, pk.id, pk.descripcion, pk.tipo_pregunta, pk.duracion, pk.categoria_id, pk.puntos, pk.aleatorias, pk.added_by
+				FROM ws_preguntas_king pk
+				INNER JOIN ws_categorias_king c on pk.categoria_id=c.id and pk.deleted_at is null and c.deleted_at is null and c.evento_id=?';
+		}else{
+			$consulta = 'SELECT pk.id as rowid, pk.id, pk.descripcion, pk.tipo_pregunta, pk.duracion, pk.categoria_id, pk.puntos, pk.aleatorias, pk.added_by
+				FROM ws_preguntas_king pk
+				INNER JOIN ws_pregunta_evaluacion pev on pev.pregunta_id=pk.id and pk.deleted_at is null 
+				INNER JOIN ws_evaluaciones ev on ev.id=pev.evaluacion_id and ev.evento_id=? and ev.actual=1 and ev.deleted_at is null ';
+		}
+		
 		$preguntas = DB::select($consulta, [$evento_id]);
 		$resultado['preguntas'] = $preguntas;
 
 		
-		
-		$consulta = 'SELECT p.id as rowid, p.id, p.enunciado, p.ayuda, p.pregunta_id, p.idioma_id, p.texto_arriba, p.texto_abajo, p.traducido
-			FROM ws_pregunta_traduc p
-			INNER JOIN ws_preguntas_king pk on pk.id=p.pregunta_id and p.deleted_at is null and pk.deleted_at is null and p.idioma_id=1
-			INNER JOIN ws_pregunta_evaluacion pev on pev.pregunta_id=pk.id
-			INNER JOIN ws_evaluaciones ev on ev.id=pev.evaluacion_id and ev.evento_id=? and ev.actual=1 and ev.deleted_at is null';
+		if ($todas_pregs) {
+			$consulta = 'SELECT p.id as rowid, p.id, p.enunciado, p.ayuda, p.pregunta_id, p.idioma_id, p.texto_arriba, p.texto_abajo, p.traducido
+				FROM ws_pregunta_traduc p
+				INNER JOIN ws_preguntas_king pk on pk.id=p.pregunta_id and p.deleted_at is null and pk.deleted_at is null and p.idioma_id=1
+				INNER JOIN ws_categorias_king c on pk.categoria_id=c.id and pk.deleted_at is null and c.deleted_at is null and c.evento_id=?';
+		}else{
+			$consulta = 'SELECT p.id as rowid, p.id, p.enunciado, p.ayuda, p.pregunta_id, p.idioma_id, p.texto_arriba, p.texto_abajo, p.traducido
+				FROM ws_pregunta_traduc p
+				INNER JOIN ws_preguntas_king pk on pk.id=p.pregunta_id and p.deleted_at is null and pk.deleted_at is null and p.idioma_id=1
+				INNER JOIN ws_pregunta_evaluacion pev on pev.pregunta_id=pk.id
+				INNER JOIN ws_evaluaciones ev on ev.id=pev.evaluacion_id and ev.evento_id=? and ev.actual=1 and ev.deleted_at is null';
+		}
 		$preguntas_traducidas 				= DB::select($consulta, [$evento_id]);
 		$resultado['preguntas_traducidas'] 	= $preguntas_traducidas;
 		
