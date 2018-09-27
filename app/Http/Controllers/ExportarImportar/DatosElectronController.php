@@ -121,12 +121,20 @@ class DatosElectronController extends Controller {
 		
 		
 		
-		$consulta = 'SELECT o.id as rowid, o.id, o.definicion, o.pregunta_traduc_id, o.image_id, o.orden, o.is_correct, o.added_by 
-			FROM ws_opciones o
-			INNER JOIN ws_pregunta_traduc p on p.id=o.pregunta_traduc_id and p.deleted_at is null
-			INNER JOIN ws_preguntas_king pk on pk.id=p.pregunta_id and pk.deleted_at is null and p.idioma_id=1
-			INNER JOIN ws_pregunta_evaluacion pev on pev.pregunta_id=pk.id
-			INNER JOIN ws_evaluaciones ev on ev.id=pev.evaluacion_id and ev.evento_id=? and ev.actual=1 and ev.deleted_at is null';
+		if ($todas_pregs) {
+			$consulta = 'SELECT o.id as rowid, o.id, o.definicion, o.pregunta_traduc_id, o.image_id, o.orden, o.is_correct, o.added_by 
+				FROM ws_opciones o
+				INNER JOIN ws_pregunta_traduc p on p.id=o.pregunta_traduc_id and p.deleted_at is null
+				INNER JOIN ws_preguntas_king pk on pk.id=p.pregunta_id and pk.deleted_at is null and p.idioma_id=1
+				INNER JOIN ws_categorias_king c on pk.categoria_id=c.id and pk.deleted_at is null and c.deleted_at is null and c.evento_id=?';
+		}else{
+			$consulta = 'SELECT o.id as rowid, o.id, o.definicion, o.pregunta_traduc_id, o.image_id, o.orden, o.is_correct, o.added_by 
+				FROM ws_opciones o
+				INNER JOIN ws_pregunta_traduc p on p.id=o.pregunta_traduc_id and p.deleted_at is null
+				INNER JOIN ws_preguntas_king pk on pk.id=p.pregunta_id and pk.deleted_at is null and p.idioma_id=1
+				INNER JOIN ws_pregunta_evaluacion pev on pev.pregunta_id=pk.id
+				INNER JOIN ws_evaluaciones ev on ev.id=pev.evaluacion_id and ev.evento_id=? and ev.actual=1 and ev.deleted_at is null';
+		}
 		$opciones = DB::select($consulta, [$evento_id]);
 		$resultado['opciones'] 	= $opciones;
 
